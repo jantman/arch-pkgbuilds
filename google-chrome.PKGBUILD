@@ -22,7 +22,7 @@ install=$pkgname.install
 _channel=stable
 source_x86_64=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb")
 source_i686=("google-chrome-${_channel}_${pkgver}_i386.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_i386.deb")
-source=('eula_text.html')
+source=('google-chrome_eula_text.html')
 md5sums_x86_64=('037cef95bea64ffa87e926af59ae117b')
 md5sums_i686=('b2e60863b171bfc152b25030df196ecb')
 md5sums=('b7e752f549b215ac77f284b6486794b6')
@@ -42,7 +42,7 @@ package() {
   gzip "$pkgdir"/usr/share/man/man1/google-chrome.1
 
   # License
-  install -Dm644 eula_text.html "$pkgdir"/usr/share/licenses/google-chrome/eula_text.html
+  install -Dm644 google-chrome_eula_text.html "$pkgdir"/usr/share/licenses/google-chrome/eula_text.html
 
   msg2 "Symlinking missing Udev lib..."
   ln -s /usr/lib/libudev.so.1 "$pkgdir"/opt/google/chrome/libudev.so.0
