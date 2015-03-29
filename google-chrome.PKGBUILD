@@ -16,12 +16,12 @@ depends=('alsa-lib' 'desktop-file-utils' 'flac' 'gconf' 'gtk2' 'harfbuzz' 'harfb
          'icu' 'libpng' 'libxss' 'libxtst' 'nss' 'opus' 'snappy' 'speech-dispatcher' 'ttf-font' 'xdg-utils')
 optdepends=('kdebase-kdialog: needed for file dialogs in KDE'
             'ttf-liberation: fix fonts for some PDFs')
-provides=("google-chrome=$pkgver")
+provides=("google-chrome=$pkgver" 'pepper-flash')
 options=('!emptydirs' '!strip')
 install=$pkgname.install
 _channel=stable
-source_x86_64=("google-chrome-stable_41.0.2272.101-1_amd64.deb::https://dl.google.com/linux/chrome/debpool/main/g/google-chrome-stable/google-chrome-stable_41.0.2272.101-1_amd64.deb")
-source_i686=("google-chrome-stable_41.0.2272.101-1_i386.deb::https://dl.google.com/linux/chrome/debpool/main/g/google-chrome-stable/google-chrome-stable_41.0.2272.101-1_i386.deb")
+source_x86_64=("google-chrome-stable_41.0.2272.101-1_amd64.deb::https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_41.0.2272.101-1_amd64.deb")
+source_i686=("google-chrome-stable_41.0.2272.101-1_i386.deb::https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_41.0.2272.101-1_i386.deb")
 source=('google-chrome_eula_text.html')
 md5sums_x86_64=('854249db290c76e024b734e77b49e72a')
 md5sums_i686=('daa848684651c6d6cfb4a1b3bf1f434d')
@@ -29,13 +29,13 @@ md5sums=('b7e752f549b215ac77f284b6486794b6')
 
 package() {
   msg2 "Extracting the data.tar.lzma..."
-  bsdtar -xf data.tar.lzma -C "$pkgdir/"
+  bsdtar -xf data.tar.xz -C "$pkgdir/"
 
   msg2 "Moving stuff in place..."
   # Icons
-  for i in 16 22 24 32 48 64 128 256; do
-    install -Dm644 "$pkgdir"/opt/google/chrome/product_logo_$i.png \
-                   "$pkgdir"/usr/share/icons/hicolor/${i}x$i/apps/google-chrome.png
+  for i in 16x16 22x22 24x24 32x32 48x48 64x64 128x128 256x256; do
+    install -Dm644 "$pkgdir"/opt/google/chrome/product_logo_${i/x*}.png \
+                   "$pkgdir"/usr/share/icons/hicolor/$i/apps/google-chrome.png
   done
 
   # Man page
@@ -44,12 +44,8 @@ package() {
   # License
   install -Dm644 google-chrome_eula_text.html "$pkgdir"/usr/share/licenses/google-chrome/eula_text.html
 
-  msg2 "Symlinking missing Udev lib..."
-  ln -s /usr/lib/libudev.so.1 "$pkgdir"/opt/google/chrome/libudev.so.0
-
   msg2 "Fixing Chrome icon resolution..."
-  _name=$(echo ${source/_*} | sed 's/.*/\u&/')
-  sed -i "/Exec=/i\StartupWMClass=$_name" "$pkgdir"/usr/share/applications/google-chrome.desktop
+  sed -i "/Exec=/i\StartupWMClass=Google-chrome-$_channel" "$pkgdir"/usr/share/applications/google-chrome.desktop
 
   msg2 "Fixing permissions of documentation folder..."
   chmod 755 "$pkgdir"/usr/share/doc/google-chrome-$_channel/
