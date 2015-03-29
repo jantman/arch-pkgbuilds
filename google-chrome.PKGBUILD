@@ -5,7 +5,7 @@
 # or use: $ curl -s https://dl.google.com/linux/chrome/rpm/stable/x86_64/repodata/other.xml.gz | gzip -df | awk -F\" '/pkgid/{ sub(".*-","",$4); print $4": "$10 }'
 
 pkgname=google-chrome
-pkgver=39.0.2171.99
+pkgver=41.0.2272.101
 pkgrel=1
 pkgdesc="An attempt at creating a safer, faster, and more stable browser (Stable Channel)"
 arch=('i686' 'x86_64')
@@ -20,11 +20,11 @@ provides=("google-chrome=$pkgver")
 options=('!emptydirs' '!strip')
 install=$pkgname.install
 _channel=stable
-source_x86_64=("google-chrome-${_channel}_${pkgver}_amd64.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_amd64.deb")
-source_i686=("google-chrome-${_channel}_${pkgver}_i386.deb::https://dl.google.com/linux/direct/google-chrome-${_channel}_current_i386.deb")
+source_x86_64=("google-chrome-stable_41.0.2272.101-1_amd64.deb::https://dl.google.com/linux/chrome/debpool/main/g/google-chrome-stable/google-chrome-stable_41.0.2272.101-1_amd64.deb")
+source_i686=("google-chrome-stable_41.0.2272.101-1_i386.deb::https://dl.google.com/linux/chrome/debpool/main/g/google-chrome-stable/google-chrome-stable_41.0.2272.101-1_i386.deb")
 source=('google-chrome_eula_text.html')
-md5sums_x86_64=('037cef95bea64ffa87e926af59ae117b')
-md5sums_i686=('b2e60863b171bfc152b25030df196ecb')
+md5sums_x86_64=('854249db290c76e024b734e77b49e72a')
+md5sums_i686=('daa848684651c6d6cfb4a1b3bf1f434d')
 md5sums=('b7e752f549b215ac77f284b6486794b6')
 
 package() {
