@@ -57,7 +57,7 @@ def get_package_info(packages_path):
         version = package['Version']
         release = 0
 
-    pkg_path = repo_base_url + package['Filename']
+    pkg_path = repo_base_url + '/' + package['Filename']
     logger.info("Package path: {p}".format(p=pkg_path))
     result = {
         'url': pkg_path,
