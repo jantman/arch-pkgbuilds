@@ -28,7 +28,7 @@ md5sums_i686=('daa848684651c6d6cfb4a1b3bf1f434d')
 md5sums=('b7e752f549b215ac77f284b6486794b6')
 
 package() {
-  msg2 "Extracting the data.tar.lzma..."
+  msg2 "Extracting the data.tar.xz..."
   bsdtar -xf data.tar.xz -C "$pkgdir/"
 
   msg2 "Moving stuff in place..."
