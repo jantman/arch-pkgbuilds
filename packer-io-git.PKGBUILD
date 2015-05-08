@@ -1,7 +1,7 @@
 # Maintainer: David Z. Kil <dave at thekilempire dot com>
 
 pkgname=packer-io-git
-pkgver=0.7.2.r21.g399837b
+pkgver=0.7.5.r181.gc8b3dff
 pkgver() {
   cd "$srcdir/packer"
   git describe --long --tags | sed -r 's/^v//;s/([^-]*-g)/r\1/;s/-/./g'
