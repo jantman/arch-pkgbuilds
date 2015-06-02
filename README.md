@@ -1,5 +1,7 @@
 # arch-pkgbuilds
 
+[![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/0.1.0/active.svg)](http://www.repostatus.org/#active)
+
 My PKGBUILDs for Arch Linux
 
 * __gcc43.PKGBUILD__ - gcc 4.3 from AUR
