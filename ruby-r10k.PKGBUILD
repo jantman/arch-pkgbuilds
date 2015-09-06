@@ -1,26 +1,27 @@
-# Maintainer: Jochen Schalanda <jochen+aur@schalanda.name>
+# Maintainer: Jason Antman <jason@jasonantman.com>
 _gemname=r10k
 pkgname=ruby-$_gemname
-pkgver=1.3.2
+pkgver=2.0.3
 pkgrel=1
 pkgdesc='Smarter Puppet deployment, powered by killer robots'
 arch=(any)
-url='http://github.com/adrienthebo/r10k'
+url='https://github.com/puppetlabs/r10k'
 license=('Apache')
 depends=(
   'ruby'
   'ruby-colored>=1.2'
-  'ruby-cri>=2.5.0'
-  'ruby-systemu-2.5'
+  'ruby-cri>=2.6.1'
+  'ruby-faraday>=0.9'
+  'ruby-faraday_middleware>=0.9'
+  'ruby-faraday_middleware-multi_json>=0.0.6'
   'ruby-log4r>=1.1.10'
-  'ruby-multi_json-1.8'
-  'ruby-json_pure'
-  'ruby-faraday-0.8'
-  'ruby-faraday_middleware'
-  'ruby-faraday_middleware-multi_json')
+  'ruby-minitar'
+  'ruby-multi_json>=1.10'
+  'ruby-semantic_puppet>=0.1'
+)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha256sums=('d087711e3dd36aace9be2927fd525066d134e5ab19b60c62c2daabf67357ecbd')
+sha256sums=('ef28c179d30c6908021320ae835cb4431ed939423369853b2d890de2ffea54f8')
 
 package() {
   cd "$srcdir"
