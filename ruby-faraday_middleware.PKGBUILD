@@ -3,7 +3,7 @@
 
 _gemname=faraday_middleware
 pkgname=ruby-$_gemname
-pkgver=0.10.0
+pkgver=0.9.2
 pkgrel=1
 pkgdesc='Various middleware for Faraday'
 arch=(any)
@@ -13,7 +13,7 @@ depends=(ruby ruby-faraday)
 options=(!emptydirs)
 source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
 noextract=($_gemname-$pkgver.gem)
-sha1sums=('f9cce29c0aff6011f395610d6d2945a07910a84d')
+sha256sums=('15d1e22157e8a0704ae7ac0156e12304368c1695f009c292b28a034d49824ad4')
 
 package() {
   local _gemdir="$(ruby -e'puts Gem.default_dir')"
