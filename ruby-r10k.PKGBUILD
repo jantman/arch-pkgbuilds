@@ -2,7 +2,7 @@
 _gemname=r10k
 pkgname=ruby-$_gemname
 pkgver=2.0.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Smarter Puppet deployment, powered by killer robots'
 arch=(any)
 url='https://github.com/puppetlabs/r10k'
@@ -10,7 +10,7 @@ license=('Apache')
 depends=(
   'ruby'
   'ruby-colored>=1.2'
-  'ruby-cri>=2.6.1'
+  'ruby-cri=2.6.1'
   'ruby-faraday>=0.9'
   'ruby-faraday_middleware>=0.9'
   'ruby-faraday_middleware-multi_json>=0.0.6'
