@@ -10,3 +10,9 @@ My PKGBUILDs for Arch Linux
 ** __update_chrome.py__ - Python script to find the latest package version from the deb repository and update the PKGBUILD accordingly.
 * __simulationcraft-git.PKGBUILD__ - my own PKGBUILD for [SimulationCraft](http://simulationcraft.org/) from git, based on the old [AUR simulationcraft-svn](https://aur.archlinux.org/packages/simulationcraft-svn/) one.
 * __vmware-systemd-services.PKGBUILD__ - systemd services for VMWare Player / Workstation 11
+
+## Building
+
+1. ``makepkg -p filename.PKGBUILD``
+2. ``mv *.pkg.tar.xz repo/``
+3. ``./update_sync.sh`` to update the repo and sync to S3
