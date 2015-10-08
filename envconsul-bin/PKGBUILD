@@ -1,0 +1,25 @@
+# Maintainer: Jason Antman <jason@jasonantman.com>
+
+pkgname=envconsul-bin
+pkgver=0.5.0
+pkgrel=1
+pkgdesc="Read and set environmental variables for processes from Consul."
+url='https://github.com/hashicorp/envconsul'
+arch=('i686' 'x86_64')
+license=('MPL')
+
+source_i686=("envconsul_i686.tar.gz::https://github.com/hashicorp/envconsul/releases/download/v0.5.0/envconsul_${pkgver}_linux_386.tar.gz")
+source_x86_64=("envconsul_x86_64.tar.gz::https://github.com/hashicorp/envconsul/releases/download/v0.5.0/envconsul_${pkgver}_linux_amd64.tar.gz")
+sha256sums_i686=('741eeaea5a54a09b743eb503aa72f400cace0a5ac07330e55c39d65f8727ec17')
+sha256sums_x86_64=('f7e602e6c1e2a69c238e0d61449543cec161f9bdd16e70a3941aa1916a729dff')
+
+package() {
+    # the directories envconsul is untarred into differ by source filename
+    if [[ "${CARCH}" == "i686" ]]; then
+        TARDIR="envconsul_${pkgver}_linux_386"
+    else
+        TARDIR="envconsul_${pkgver}_linux_amd64"
+    fi
+    install -d ${pkgdir}/usr/bin
+    install -Dm755 ${srcdir}/${TARDIR}/envconsul ${pkgdir}/usr/bin
+}
