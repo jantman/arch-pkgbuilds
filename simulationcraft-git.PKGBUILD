@@ -1,7 +1,7 @@
 # Maintainer: Jason Antman <jason@jasonantman.com>
 pkgname="simulationcraft-git"
 pkgdesc="A tool to simulate, analyze, and graphically display World of Warcraft combat (GIT code, CLI only)"
-pkgver=603.23.1.g555b62b
+pkgver=620.02.89.gfe96369
 pkgrel=1
 arch=('x86_64')
 url="https://code.google.com/p/simulationcraft/"
