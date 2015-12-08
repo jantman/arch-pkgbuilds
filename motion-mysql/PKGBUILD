@@ -1,18 +1,19 @@
 # $Id$
-# Maintainer: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Maintainer: Jason Antman <jason@jasonantman.com>
 
-pkgname=motion
+pkgname=motion-mysql
 pkgver=3.2.12
-pkgrel=12
-pkgdesc="A software motion detector which grabs images from video4linux devices and/or from webcams"
+pkgrel=1
+pkgdesc="A software motion detector which grabs images from video4linux devices and/or from webcams, with MySQL support"
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://www.lavrsen.dk/twiki/bin/view/Motion/WebHome"
-depends=('libjpeg' 'v4l-utils' 'ffmpeg-compat')
+depends=('libjpeg' 'v4l-utils' 'ffmpeg-compat' 'libmariadbclient')
+conflicts=('motion')
 backup=('etc/motion/motion.conf')
 options=('!makeflags')
 install=motion.install
-source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz
+source=(http://downloads.sourceforge.net/motion/motion-${pkgver}.tar.gz
 	motion.service
 	motion.tmpfiles
 	ffmpeg-0.8.patch
@@ -26,7 +27,7 @@ md5sums=('1ba0065ed50509aaffb171594c689f46'
          'e85c596292aceb425fcf17e5072e2fff')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/motion-${pkgver}"
   export PKG_CONFIG_PATH=/usr/lib/ffmpeg-compat/pkgconfig:$PKG_CONFIG_PATH
   patch -Np1 -i $srcdir/ffmpeg-0.8.patch
   patch -Np1 -i $srcdir/linux-headers.patch
@@ -34,14 +35,14 @@ build() {
   autoreconf
   ./configure --prefix=/usr \
     --without-pgsql \
-    --without-mysql \
+    --with-mysql \
     --sysconfdir=/etc/motion \
     --with-ffmpeg
   make
 }
 
 package(){
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/motion-${pkgver}"
   make DESTDIR="${pkgdir}" install
   mv "${pkgdir}/etc/motion/motion-dist.conf" "${pkgdir}/etc/motion/motion.conf"
   install -Dm644 "${srcdir}/motion.service" "${pkgdir}/usr/lib/systemd/system/motion.service"
