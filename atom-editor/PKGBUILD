@@ -1,4 +1,4 @@
-# Maintainer: Sebastian Jug <sebastian.jug@gmail.com>
+# Maintainer: Sebastian Jug <seb@stianj.ug>
 # Contributor: John Reese <jreese@noswap.com>
 # Upstream URL: https://github.com/atom/atom
 #
@@ -6,32 +6,30 @@
 # https://github.com/sjug/atom-editor
 
 pkgname=atom-editor
-pkgver=1.0.8
+pkgver=1.5.2
 pkgrel=1
 pkgdesc='Chrome-based text editor from Github'
 arch=('x86_64' 'i686')
 url='https://github.com/atom/atom'
 license=('MIT')
-depends=('alsa-lib' 'gconf' 'gtk2' 'libgnome-keyring' 'libnotify' 'libxtst' 'nodejs' 'nss' 'python2')
+depends=('alsa-lib' 'desktop-file-utils' 'gconf' 'gtk2' 'libgnome-keyring' 'libnotify' 'libxtst' 'nodejs' 'nss' 'python2')
 optdepends=('gvfs: file deletion support')
 makedepends=('git' 'npm')
 conflicts=('atom-editor-bin' 'atom-editor-git')
-source=("https://github.com/atom/atom/archive/v${pkgver}.tar.gz"
-        'atom-python.patch')
-sha256sums=('46e7e44e407461fec1adc1b816264853691b1c77824404599e66d85feca2fae7'
-            '9a1f4e2efa7c0b2fb053d27979b0231f75f1f0d928e06413ddebeadd5d7ed46c')
+install=atom.install
+source=("https://github.com/atom/atom/archive/v${pkgver}.tar.gz")
+sha256sums=('1143189accbb7dc09fb045e739eb5ba41f6a7563da89baa62d785b70da53798b')
 
 prepare() {
   cd "atom-$pkgver"
-
-  patch -Np0 -i "$srcdir/atom-python.patch"
 
   sed -i -e "/exception-reporting/d" \
       -e "/metrics/d" package.json
 
   sed -e "s/<%= description %>/$pkgdesc/" \
-    -e "s|<%= executable %>|/usr/bin/atom|"\
-    -e "s|<%= iconName %>|atom|"\
+    -e "s|<%= appName %>|Atom|"\
+    -e "s|<%= installDir %>/share/<%= appFileName %>|/usr/bin|"\
+    -e "s|<%= iconPath %>|atom|"\
     resources/linux/atom.desktop.in > resources/linux/Atom.desktop
 }
 
@@ -48,6 +46,6 @@ package() {
   script/grunt install --build-dir "$srcdir/atom-build" --install-dir "$pkgdir/usr"
 
   install -Dm644 resources/linux/Atom.desktop "$pkgdir/usr/share/applications/atom.desktop"
-  install -Dm644 resources/atom.png "$pkgdir/usr/share/pixmaps/atom.png"
+  install -Dm644 resources/app-icons/stable/png/1024.png "$pkgdir/usr/share/pixmaps/atom.png"
   install -Dm644 LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE.md"
 }
