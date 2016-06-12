@@ -9,6 +9,8 @@ git clone --depth=1 "https://aur.archlinux.org/${packagename}.git" $dest_dir
 pushd $dest_dir
 gitrev=$(git rev-parse HEAD)
 read -p "Opening PKGBUILD with less. Please inspect for any malicious code."
+unset LESS
+unset LESSOPEN
 less PKGBUILD
 read -p "Ctrl+C now to exit, or continue to source PKGBUILD and get vars"
 pkgver=`source PKGBUILD && echo "\${pkgver}-\${pkgrel}"`
