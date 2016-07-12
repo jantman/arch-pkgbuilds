@@ -1,0 +1,28 @@
+--- secondlife.orig	2016-07-11 15:11:47.613889303 -0400
++++ secondlife	2016-07-11 19:12:43.806667951 -0400
+@@ -61,15 +61,7 @@
+ export SDL_VIDEO_X11_DGAMOUSE=0
+ 
+ ## - Works around a problem with misconfigured 64-bit systems not finding GL
+-I386_MULTIARCH="$(dpkg-architecture -ai386 -qDEB_HOST_MULTIARCH 2>/dev/null)"
+-MULTIARCH_ERR=$?
+-if [ $MULTIARCH_ERR -eq 0 ]; then
+-    echo 'Multi-arch support detected.'
+-    MULTIARCH_GL_DRIVERS="/usr/lib/${I386_MULTIARCH}/dri"
+-    export LIBGL_DRIVERS_PATH="${LIBGL_DRIVERS_PATH}:${MULTIARCH_GL_DRIVERS}:/usr/lib64/dri:/usr/lib32/dri:/usr/lib/dri"
+-else
+-    export LIBGL_DRIVERS_PATH="${LIBGL_DRIVERS_PATH}:/usr/lib64/dri:/usr/lib32/dri:/usr/lib/dri"
+-fi
++export LIBGL_DRIVERS_PATH="${LIBGL_DRIVERS_PATH}:/usr/lib64/dri:/usr/lib32/dri:/usr/lib/dri:/usr/lib32/xorg/modules/dri"
+ 
+ ## - The 'scim' GTK IM module widely crashes the viewer.  Avoid it.
+ if [ "$GTK_IM_MODULE" = "scim" ]; then
+@@ -119,7 +111,7 @@
+ #    fi
+ #fi
+ 
+-export LD_LIBRARY_PATH="$PWD/lib:${LD_LIBRARY_PATH}"
++export LD_LIBRARY_PATH="$PWD/lib:/usr/lib:${LD_LIBRARY_PATH}"
+ 
+ # Copy "$@" to ARGS array specifically to delete the --skip-gridargs switch.
+ # The gridargs.dat file is no more, but we still want to avoid breaking
