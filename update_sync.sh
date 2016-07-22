@@ -1,6 +1,8 @@
 #!/bin/bash
 
-repo-add repo/jantman.db.tar.gz repo/*.pkg.tar.xz
+repo-add -n repo/jantman.db.tar.gz repo/*.pkg.tar.xz
 ~/venvs/foo/bin/s3cmd sync repo/* s3://archrepo.jasonantman.com/current/
 # local symlink
 ~/venvs/foo/bin/s3cmd put repo/jantman.db.tar.gz s3://archrepo.jasonantman.com/current/jantman.db
+
+echo "WARNING: because Arch doesn't really support versioning, you can only have one version of a given package in a repo at a time. 'repo-add' will remove the old version before adding a new one. Unfortunately, it doesn't seem to have any version comparison logic; using '*' here will add packages in lexicographic order, so if we have both foo-1.2.2 and foo-1.2.12 in the source directory, 'foo-1.2.2' will win. Yuck."
