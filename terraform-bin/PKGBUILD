@@ -20,6 +20,6 @@ noextract=('_terraform')
 
 package() {
     install -d ${pkgdir}/usr/bin
-    install -Dm755 ${srcdir}/terraform ${srcdir}/terraform-* ${pkgdir}/usr/bin
+    install -Dm755 ${srcdir}/terraform ${pkgdir}/usr/bin
     install -Dm644 ${srcdir}/_terraform ${pkgdir}/usr/share/site-functions/_terraform
 }
