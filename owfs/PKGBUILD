@@ -2,7 +2,7 @@
 
 pkgname=owfs
 pkgver=3.1p0
-pkgrel=3
+pkgrel=4
 pkgdesc="OWFS is an easy way to use the powerful 1-wire system of Dallas/Maxim."
 arch=('i686' 'x86_64')
 url="http://www.owfs.org/"
@@ -22,6 +22,12 @@ prepare() {
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
+# Setting these env variables overwrites any command-line options we don't want...
+ export PERL_MM_USE_DEFAULT=1 PERL_AUTOINSTALL=--skipdeps \
+    PERL_MM_OPT="INSTALLDIRS=vendor DESTDIR='$pkgdir'" \
+       PERL_MB_OPT="--installdirs vendor --destdir '$pkgdir'" \
+          PERL5LIB="" PERL_LOCAL_LIB_ROOT="" \
+             MODULEBUILDRC=/dev/null
   ./configure --prefix=/usr \
               --libexecdir=/usr/lib \
               --disable-owtcl \
@@ -36,7 +42,7 @@ build() {
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  make DESTDIR="${pkgdir}" install
+  make DESTDIR="${pkgdir}" INSTALLDIRS=vendor install
 }
 
 # vim:ts=2:sw=2:et
