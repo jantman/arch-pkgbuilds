@@ -19,14 +19,17 @@ optdepends=('mpdecimal: for decimal'
             'xz')
 options=('!makeflags')
 source=(http://www.python.org/ftp/python/${pkgver}/Python-${pkgver}.tar.xz
-        python-3.3-ssl-nosslv3.patch)
+        python-3.3-ssl-nosslv3.patch
+        python-3.3-test-expat.patch)
 sha256sums=('5226e4bf7a530c3ff2bcde0c94e0e09e59a8bcde0114fe0268bc925bdabb5d3f'
-            'd54bc0ac72218b37c1c2f7a8f03f904a06c2270518a5f3b9e27e54578fe1fb04')
+            'd54bc0ac72218b37c1c2f7a8f03f904a06c2270518a5f3b9e27e54578fe1fb04'
+            '5df423235ca68f8736a3fc7263ad90eaf85dab23941f98e3f924a31be13d0b54')
 
 prepare() {
   cd "${srcdir}/Python-${pkgver}"
 
   patch -Np1 -i ${srcdir}/python-3.3-ssl-nosslv3.patch
+  patch -Np1 -i ${srcdir}/python-3.3-test-expat.patch
 
   # FS#23997
   sed -i -e "s|^#.* /usr/local/bin/python|#!/usr/bin/python|" Lib/cgi.py

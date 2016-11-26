@@ -1,0 +1,47 @@
+From cbdb7791b1ba1e23c069bbdc644004f53a4814a4 Mon Sep 17 00:00:00 2001
+From: Martin Panter <vadmium+py@gmail.com>
+Date: Thu, 14 Jul 2016 01:31:46 +0000
+Subject: [PATCH] =?UTF-8?q?Issue=20#27369:=20Don=E2=80=99t=20test=20error?=
+ =?UTF-8?q?=20message=20detail=20that=20changed=20in=20Expat=202.2.0?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ Lib/test/test_pyexpat.py | 6 ++----
+ Misc/NEWS                | 3 +++
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/Lib/test/test_pyexpat.py b/Lib/test/test_pyexpat.py
+index 8ef3917..79c4cff 100644
+--- a/Lib/test/test_pyexpat.py
++++ b/Lib/test/test_pyexpat.py
+@@ -603,11 +603,9 @@ def test2(self):
+         # \xc2\x85 is UTF-8 encoded U+0085 (NEXT LINE)
+         xml = b"<?xml version\xc2\x85='1.0'?>\r\n"
+         parser = expat.ParserCreate()
+-        try:
++        err_pattern = r'XML declaration not well-formed: line 1, column \d+'
++        with self.assertRaisesRegex(expat.ExpatError, err_pattern):
+             parser.Parse(xml, True)
+-            self.fail()
+-        except expat.ExpatError as e:
+-            self.assertEqual(str(e), 'XML declaration not well-formed: line 1, column 14')
+ 
+ class ErrorMessageTest(unittest.TestCase):
+     def test_codes(self):
+diff --git a/Misc/NEWS b/Misc/NEWS
+index 9daa23d..707b4f2 100644
+--- a/Misc/NEWS
++++ b/Misc/NEWS
+@@ -65,6 +65,9 @@
+ Tests
+ -----
+ 
++- Issue #27369: In test_pyexpat, avoid testing an error message detail that
++  changed in Expat 2.2.0.
++
+ - Issue #17752: Fix distutils tests when run from the installed location.
+ 
+ - Issue #20946: Correct alignment assumptions of some ctypes tests.
+
