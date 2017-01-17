@@ -1,0 +1,22 @@
+pkgbase = xflux
+	pkgdesc = (f.lux for X) Changes monitor color temperature adaptively to ease eye strain (command-line version)
+	pkgver = 20130901
+	pkgrel = 5
+	url = https://justgetflux.com/
+	arch = i686
+	arch = x86_64
+	license = custom
+	depends = libxxf86vm
+	depends = libxrandr
+	depends = gcc-libs
+	source = f.lux-eula.txt
+	source = f.lux-eula.html::https://justgetflux.com/news/pages/eula/index.html
+	sha256sums = 05b1edc619263941960f37ebce2cf63baabdd5959a287b52b6829b7195d20653
+	sha256sums = SKIP
+	source_i686 = https://justgetflux.com/linux/xflux-pre.tgz
+	sha256sums_i686 = fda5d10c3ca16ba38eddc5fbdecebeccd607c4c95787b4379d1ab372760877b4
+	source_x86_64 = https://justgetflux.com/linux/xflux64.tgz
+	sha256sums_x86_64 = cc50158fabaeee58c331f006cc1c08fd2940a126e99d37b76c8e878ef20c2021
+
+pkgname = xflux
+
