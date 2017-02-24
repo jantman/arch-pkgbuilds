@@ -4,7 +4,7 @@
 
 pkgname=logkeys-git
 _gitname="logkeys"
-pkgver=r62.c0a2971
+pkgver=r70.0aab01a
 epoch=1
 pkgrel=1
 pkgdesc="Simple keylogger supporting also USB keyboards."
