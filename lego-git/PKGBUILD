@@ -2,7 +2,7 @@
 
 pkgname='lego-git'
 pkgrel=1
-pkgver=f5d538c 
+pkgver=r557.5dfe609 
 pkgdesc='Lets Encrypt client and ACME library written in Go'
 url='https://github.com/xenolf/lego'
 arch=('x86_64' 'i686')
