@@ -1,0 +1,3 @@
+post_remove() {
+  userdel flow-tools > /dev/null
+}
