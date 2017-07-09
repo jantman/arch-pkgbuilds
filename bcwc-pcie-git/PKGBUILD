@@ -15,7 +15,7 @@ provides=('bcwc-pcie' 'bcwc-pcie-dkms')
 replaces=('bcwc-pcie' 'bcwc-pcie-dkms')
 install="$pkgname.install"
 
-source=("$pkgname::git+https://github.com/patjak/bcwc_pcie.git#branch=mainline"
+source=("$pkgname::git+https://github.com/patjak/bcwc_pcie.git#commit=fcdcc9a"
         "bcwc-pcie.modprobe.conf"
         "bcwc-pcie.modules-load.conf")
 md5sums=('SKIP'
