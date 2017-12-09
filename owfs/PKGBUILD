@@ -1,18 +1,20 @@
 # Maintainer: Spyros Stathopoulos <spystath@gmail.com>
 
 pkgname=owfs
-pkgver=3.1p0
-pkgrel=4
+pkgver=3.2p1
+pkgrel=1
 pkgdesc="OWFS is an easy way to use the powerful 1-wire system of Dallas/Maxim."
 arch=('i686' 'x86_64')
 url="http://www.owfs.org/"
 license=('GPL')
 source=("http://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.gz"
-        "systemd_journal.patch")
+        "systemd_journal.patch"
+        "owfs.conf")
 depends=('avahi' 'fuse' 'perl')
 makedepends=('swig')
-sha1sums=('f82bf91e4f78a667c09a44d486139f1359f0950c'
-          '02aa7d70e6ed3e6dc309a89b512038362272d8ac')
+sha1sums=('4ee76e686bec769acde5bfbda148a8693df244c6'
+          'ff13b0a3d56206e32cf0307042351298e3f27d2d'
+          '99a72935a8d2bdcd79a745983cda85fd5d3035f4')
 
 prepare() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -22,12 +24,6 @@ prepare() {
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-# Setting these env variables overwrites any command-line options we don't want...
- export PERL_MM_USE_DEFAULT=1 PERL_AUTOINSTALL=--skipdeps \
-    PERL_MM_OPT="INSTALLDIRS=vendor DESTDIR='$pkgdir'" \
-       PERL_MB_OPT="--installdirs vendor --destdir '$pkgdir'" \
-          PERL5LIB="" PERL_LOCAL_LIB_ROOT="" \
-             MODULEBUILDRC=/dev/null
   ./configure --prefix=/usr \
               --libexecdir=/usr/lib \
               --disable-owtcl \
@@ -42,7 +38,9 @@ build() {
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  make DESTDIR="${pkgdir}" INSTALLDIRS=vendor install
+  make DESTDIR="${pkgdir}" install
+
+  install -Dm644 "${srcdir}/owfs.conf" "${pkgdir}/usr/lib/sysusers.d/owfs.conf"
 }
 
 # vim:ts=2:sw=2:et
