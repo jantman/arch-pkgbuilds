@@ -2,7 +2,7 @@
 
 pkgname=pycharm-community
 pkgver=2017.2.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Powerful Python and Django IDE. Community edition."
 arch=('i686' 'x86_64')
 options=('!strip')
