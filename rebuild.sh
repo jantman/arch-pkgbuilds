@@ -1,7 +1,7 @@
 #!/bin/bash -x
 
 SCRIPTPATH=$(readlink -f $(dirname $0))
-PKGNAMES="bcwc-pcie-git broadcom-wl chromedriver envconsul-bin facetimehd-firmware franz-bin google-chrome hotshots lego-git macfanctld owfs pycharm-community skype skypeforlinux-bin spotify virtualbox-ext-oracle"
+PKGNAMES="bcwc-pcie-git broadcom-wl chromedriver envconsul-bin facetimehd-firmware franz4-bin google-chrome hotshots lego-git macfanctld owfs pycharm-community skype skypeforlinux-bin spotify virtualbox-ext-oracle"
 
 success=""
 failed=""
