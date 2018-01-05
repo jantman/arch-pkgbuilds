@@ -155,7 +155,7 @@ Server = {base_url_stripped}
         logger.debug('Command output: %s', res)
         remotes = {}
         first_rmt = None
-        for line in res.split("\n"):
+        for line in res.decode().split("\n"):
             line = line.strip()
             if line == '':
                 continue
