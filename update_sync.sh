@@ -1,4 +1,4 @@
-#!/bin/bash set -ex
+#!/bin/bash -ex
 
 repo-add -n repo/jantman.db.tar.gz repo/*.pkg.tar.xz
 source ~/venvs/current/bin/activate
