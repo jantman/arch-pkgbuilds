@@ -2,7 +2,7 @@
 
 pkgname="facetimehd-firmware"
 pkgver=1.43.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Firmware for the Broadcom 1570 PCIe webcam."
 arch=('x86_64')
 url="https://github.com/patjak/facetimehd-firmware"
