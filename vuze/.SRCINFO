@@ -1,0 +1,19 @@
+pkgbase = vuze
+	pkgdesc = A feature-rich Java-based BitTorrent client (previously called 'Azureus')
+	pkgver = 5.7.6.0
+	pkgrel = 1
+	url = http://sourceforge.net/projects/azureus/
+	install = vuze.install
+	arch = x86_64
+	license = GPL
+	depends = desktop-file-utils
+	depends = java-runtime
+	optdepends = vuze-plugin-countrylocator: Country flags for the "Peers" tab
+	optdepends = vuze-plugin-mldht: The alternative Distributed Hash Table implementation (DHT) used by µTorrent
+	optdepends = xulrunner192: Needed for the channels GUI
+	options = !strip
+	source = http://downloads.sourceforge.net/azureus/vuze/Vuze_5760/Vuze_5760_linux.tar.bz2
+	md5sums = 0c6cba3f2ef401df5c09e020ce9b1ff3
+
+pkgname = vuze
+
