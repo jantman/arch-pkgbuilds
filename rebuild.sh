@@ -1,7 +1,7 @@
 #!/bin/bash -x
 
 SCRIPTPATH=$(readlink -f $(dirname $0))
-PKGNAMES="broadcom-wl chromedriver google-chrome hotshots macfanctld spotify virtualbox-ext-oracle"
+PKGNAMES="chromedriver google-chrome hotshots macfanctld spotify virtualbox-ext-oracle"
 
 success=""
 failed=""
