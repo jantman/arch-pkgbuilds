@@ -1,39 +1,32 @@
 # Maintainer: XavierCLL <xavier.corredor.llano (a) gmail.com>
 
 pkgname=pycharm-professional
-pkgver=2017.3.3
-_pkgver=2017.3.3
-pkgrel=2
-pkgdesc="Powerful Python and Django IDE. Professional edition."
-arch=('i686' 'x86_64')
-options=('!strip')
-url="http://www.jetbrains.com/pycharm/"
+pkgver=2018.2.3
+_pkgver=2018.2.3
+pkgrel=1
+pkgdesc="Powerful Python and Django IDE. Professional Edition."
+arch=('x86_64')
+url='http://www.jetbrains.com/pycharm/'
 conflicts=('pycharm' 'pycharm-community')
 provides=('pycharm')
 license=('custom')
 install=${pkgname}.install
 backup=(opt/$pkgname/bin/pycharm.vmoptions opt/$pkgname/bin/pycharm64.vmoptions)
-if [[ $pycharm_professional_nojdk = "yes" ]]; then
-    depends=('java-runtime-common' 'java-runtime>=8' 'ttf-font' 'libxtst' 'libxslt')
-else
-    depends=('giflib' 'ttf-font' 'libxtst' 'libxslt')
-fi
+depends=('giflib' 'glibc' 'sh' 'ttf-font' 'libxtst' 'libxslt' 'python')
+source=(https://download.jetbrains.com/python/$pkgname-$_pkgver.tar.gz
+        'pycharm-professional.desktop'
+        'pycharm-professional.install'
+        'pycharm'
+        'charm.desktop'
+        'charm')
+# https://download.jetbrains.com/python/pycharm-professional-${_pkgver}.tar.gz.sha256
+sha256sums=('141669a6e8073da0fa328a4aa749fb79a1342ee68edcaee19023e7d59a9dc548'
+            'aaf7113e8c56e4d977eca204d57350d9493eda2710abefd2488a2b5d47c53344'
+            '40b297ac1d883583ed5d7aae75fb09497a2af5bda9dd4aff83bd6d2892ab6c95'
+            '818ed42f4200ae13315587abf6f247f93e68c658a94794f73924c985cdc145d0'
+            '21e77b6b18e14636f9827e1f8d45bbc8dba8fb14ea5f4cde285c1ef4bb01c85e'
+            '7e9bc3873f6c8039b4d7c181806ce4363632ff5811e966142749396cd849d86f')
 makedepends=('python2-setuptools' 'python-setuptools')
-if [[ $pycharm_professional_nojdk = "yes" ]]; then
-    source=(https://download.jetbrains.com/python/$pkgname-$_pkgver-no-jdk.tar.gz
-            'pycharm-professional.desktop'
-            'pycharm-professional.install'
-            'pycharm'
-            'charm.desktop'
-            'charm')
-else
-    source=(https://download.jetbrains.com/python/$pkgname-$_pkgver.tar.gz
-            'pycharm-professional.desktop'
-            'pycharm-professional.install'
-            'pycharm'
-            'charm.desktop'
-            'charm')
-fi
 optdepends=('ipython2: For enhanced interactive Python shell v2 inside Pycharm'
             'ipython: For enhanced interactive Python shell v3 inside Pycharm'
             'openssh: For deployment and remote connections'
@@ -51,24 +44,7 @@ optdepends=('ipython2: For enhanced interactive Python shell v2 inside Pycharm'
             'python2-tox: Python environments for testing tool with Python 2'
             'python-tox: Python environments for testing tool with Python 3', 
             'jupyter: For support Jupyter Notebook')
-# https://download.jetbrains.com/python/pycharm-professional-${_pkgver}-no-jdk.tar.gz.sha256
-if [[ $pycharm_professional_nojdk = "yes" ]]; then
-sha256sums=('249a29318b53003662dbf330fb4e177218740ac1334e0f2401bacec6f3fc49d1'
-            '016db1860a8b36d408c827f90aeb04b9d55cf21ea36788a9d8510cc54fae1c49'
-            'c1a74303d9e870918bd8068f761c8251b996694b1b96b3537fbca317679c4958'
-            '54603a788b4ecad5d0a92e5b7fe37a98979250d2b5fd7d037759b4254b0b1607'
-            'e1cf2a280d90a55710131bdf33f4026a427d10131ddd5c776a936ee1ecf5a6fb'
-            '675a2a9f94baa4dd27d30cd3d1948a6ca1e8a3628722303ecd615fc4fe9b4798')
-else
-sha256sums=('f97d56f15750b6a1a94aeeeaab16ab7b6b52f3a32a01f28e2439aa44d4e60ca0'
-            '016db1860a8b36d408c827f90aeb04b9d55cf21ea36788a9d8510cc54fae1c49'
-            'c1a74303d9e870918bd8068f761c8251b996694b1b96b3537fbca317679c4958'
-            '54603a788b4ecad5d0a92e5b7fe37a98979250d2b5fd7d037759b4254b0b1607'
-            'e1cf2a280d90a55710131bdf33f4026a427d10131ddd5c776a936ee1ecf5a6fb'
-            '675a2a9f94baa4dd27d30cd3d1948a6ca1e8a3628722303ecd615fc4fe9b4798')
-
-fi
-
+            
 build() {
   cd pycharm-$_pkgver
 
@@ -80,16 +56,19 @@ build() {
 }
 
 package() {
+  # workaround FS#40934
+  sed -i 's/lcd/on/' pycharm-$_pkgver/bin/*.vmoptions
+
   # base
   install -dm 755 $pkgdir/opt/$pkgname
-  cp -dr --no-preserve=ownership $srcdir/pycharm-$_pkgver/* $pkgdir/opt/$pkgname
+  cp -dr --no-preserve=ownership pycharm-$_pkgver/* $pkgdir/opt/$pkgname
   install -dm 755 $pkgdir/usr/share/{applications,pixmaps}
   install -dm 755 $pkgdir/usr/bin/
   install -Dm 644 $pkgdir/opt/$pkgname/bin/pycharm.png $pkgdir/usr/share/pixmaps/pycharm.png
   
   # licenses
   install -dm 755 $pkgdir/usr/share/licenses/$pkgname/
-  cp -dr --no-preserve=ownership $srcdir/pycharm-$_pkgver/license/* $pkgdir/usr/share/licenses/$pkgname
+  cp -dr --no-preserve=ownership pycharm-$_pkgver/license/* $pkgdir/usr/share/licenses/$pkgname
   
   # exec
   install -Dm 755 pycharm $pkgdir/usr/bin/
