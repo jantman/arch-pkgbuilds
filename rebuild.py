@@ -43,6 +43,23 @@ class ArchRebuilder(object):
         logger.info(
             'Found %d packages to update: %s', len(to_upgrade), to_upgrade
         )
+        for pkgname in to_upgrade:
+            self._update_pkg(pkgname)
+            self._build_pkg(pkgname)
+        self.prune_repo()
+
+    def _update_pkg(self, pkg_name):
+        raise NotImplementedError()
+
+    def _build_pkg(self, pkg_name):
+        raise NotImplementedError()
+        # self._copy_to_repo(fname)
+
+    def _copy_to_repo(self, fname):
+        raise NotImplementedError()
+
+    def prune_repo(self):
+        raise NotImplementedError()
 
     def _list_packages(self):
         """Return a list of string package names in pwd"""
