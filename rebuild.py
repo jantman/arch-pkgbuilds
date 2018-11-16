@@ -13,6 +13,7 @@ import re
 import os
 import requests
 import subprocess
+import tarfile
 
 FORMAT = "[%(asctime)s %(levelname)s] %(message)s"
 logging.basicConfig(level=logging.WARNING, format=FORMAT)
@@ -21,15 +22,19 @@ logger = logging.getLogger()
 
 class ArchRebuilder(object):
 
+    def __init__(self, repofile):
+        self._repofile = repofile
+
     def run(self):
         """ do stuff here """
         pkgnames = self._list_packages()
         logger.info(
             'Found %d packages in directory: %s', len(pkgnames), pkgnames
         )
+        pkginfo = self.read_repo_file()
         to_upgrade = []
         for name in pkgnames:
-            curr = self.current_package_version(name)
+            curr = pkginfo[name]['VERSION']
             latest = self.latest_package_version(name)
             logger.info('Package %s: current=%s latest=%s', name, curr, latest)
             if curr != latest:
@@ -49,21 +54,43 @@ class ArchRebuilder(object):
             res.append(fname.split('/')[-2])
         return sorted(res)
 
-    def current_package_version(self, pkg_name):
-        """Return current version of package in pwd"""
-        logger.debug('Getting current package version for: %s', pkg_name)
-        fpath = os.path.realpath(os.path.join(pkg_name, 'PKGBUILD'))
-        cmd = ['/bin/bash', '-c', 'source %s && echo $pkgver' % fpath]
-        logger.debug('Run: %s', ' '.join(cmd))
-        p = subprocess.run(cmd, capture_output=True)
-        assert p.returncode == 0
-        ver = p.stdout.decode().strip()
-        cmd = ['/bin/bash', '-c', 'source %s && echo $pkgrel' % fpath]
-        logger.debug('Run: %s', ' '.join(cmd))
-        p = subprocess.run(cmd, capture_output=True)
-        assert p.returncode == 0
-        rel = p.stdout.decode().strip()
-        return '%s-%s' % (ver, rel)
+    def read_repo_file(self):
+        """
+        Read a repository .tar.gz; return dict of package name to dict info
+        """
+        res = {}
+        with tarfile.open(self._repofile, 'r:gz') as tar:
+            for f in tar.getmembers():
+                if f.name.endswith('/desc'):
+                    tmp = self._repo_file_info(tar.extractfile(f))
+                    res[tmp['NAME']] = tmp
+        return res
+
+    def _repo_file_info(self, f):
+        """
+        :param f: File in an Arch repo .tar.gz
+        :type f: io.BufferedReader
+        :return: dict of key/value pairs for the package info
+        :rtype: dict
+        """
+        key = None
+        items = []
+        result = {}
+        for line in f.readlines():
+            line = line.decode().strip()
+            if key is None and line.startswith('%') and line.endswith('%'):
+                key = line.strip('%')
+                continue
+            if line == '':
+                if len(items) == 1:
+                    result[key] = items[0]
+                else:
+                    result[key] = items
+                key = None
+                items = []
+                continue
+            items.append(line)
+        return result
 
     def latest_package_version(self, pkg_name):
         """Return latest version of package on AUR"""
@@ -97,6 +124,8 @@ def parse_args(argv):
     p = argparse.ArgumentParser(description='Arch rebuild script')
     p.add_argument('-v', '--verbose', dest='verbose', action='count', default=0,
                    help='verbose output. specify twice for debug-level output.')
+    p.add_argument('REPO_TAR_GZ', action='store', type=str,
+                   help='Path to repo .tar.gz file')
     args = p.parse_args(argv)
     return args
 
@@ -137,4 +166,4 @@ if __name__ == "__main__":
     elif args.verbose == 1:
         set_log_info()
 
-    ArchRebuilder().run()
+    ArchRebuilder(args.REPO_TAR_GZ).run()
