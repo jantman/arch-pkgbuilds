@@ -1,0 +1,29 @@
+pkgbase = skypeforlinux-stable-bin
+	pkgdesc = Skype for Linux - Stable/Release Version
+	pkgver = 8.34.0.78
+	pkgrel = 1
+	url = http://www.skype.com
+	arch = x86_64
+	license = custom
+	makedepends = asar
+	depends = gtk3
+	depends = libxss
+	depends = gconf
+	depends = alsa-lib
+	depends = libxtst
+	depends = libsecret
+	depends = nss
+	depends = glibc>=2.28-4
+	optdepends = gnome-keyring
+	provides = skypeforlinux
+	provides = skype
+	conflicts = skypeforlinux
+	conflicts = skypeforlinux-bin
+	conflicts = skypeforlinux-preview-bin
+	conflicts = skypeforlinux-beta-bin
+	conflicts = skype
+	source = https://repo.skype.com/deb/pool/main/s/skypeforlinux/skypeforlinux_8.34.0.78_amd64.deb
+	sha256sums = e017fa5f3b78104b18c9e3ec00a678e513095cd4129a83b301f2b2c0dbb606a5
+
+pkgname = skypeforlinux-stable-bin
+
