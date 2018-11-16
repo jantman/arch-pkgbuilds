@@ -32,11 +32,12 @@ class ArchRebuilder(object):
             'Found %d packages in directory: %s', len(pkgnames), pkgnames
         )
         pkginfo = self.read_repo_file()
+        latest_versions = self.latest_package_versions(pkgnames)
         to_upgrade = []
         for name in pkgnames:
-            curr = pkginfo[name]['VERSION']
-            latest = self.latest_package_version(name)
-            logger.info('Package %s: current=%s latest=%s', name, curr, latest)
+            curr = pkginfo.get(name, {'VERSION': 'NONE'})['VERSION']
+            latest = latest_versions[name]
+            logger.info('Package %s current=%s latest=%s', name, curr, latest)
             if curr != latest:
                 to_upgrade.append(name)
         logger.info(
@@ -46,6 +47,7 @@ class ArchRebuilder(object):
     def _list_packages(self):
         """Return a list of string package names in pwd"""
         res = []
+        logger.debug('Listing packages in repo directory')
         for fname in glob(
             os.path.join(
                 os.path.realpath(os.path.dirname(__file__)), '*', 'PKGBUILD'
@@ -58,6 +60,7 @@ class ArchRebuilder(object):
         """
         Read a repository .tar.gz; return dict of package name to dict info
         """
+        logger.debug('Opening %s as gzipped tarfile', self._repofile)
         res = {}
         with tarfile.open(self._repofile, 'r:gz') as tar:
             for f in tar.getmembers():
@@ -92,26 +95,29 @@ class ArchRebuilder(object):
             items.append(line)
         return result
 
-    def latest_package_version(self, pkg_name):
+    def latest_package_versions(self, pkg_names):
         """Return latest version of package on AUR"""
-        logger.debug('Getting latest package version for: %s', pkg_name)
-        r = requests.get(
-            'https://aur.archlinux.org/rpc/?v=5&type=info&arg[]=%s' % pkg_name
-        )
+        logger.info('Getting latest package versions')
+        url = 'https://aur.archlinux.org/rpc/?v=5&type=info&arg[]=%s' % \
+            '&arg[]='.join(pkg_names)
+        logger.debug('GET %s', url)
+        r = requests.get(url)
         r.raise_for_status()
         j = r.json()
         if j.get('type', '') == 'error':
             raise RuntimeError(
                 'ERROR getting info for package %s: %s', pkg_name, r.content
             )
-        if len(j['results']) != 1:
+        if len(j['results']) != len(pkg_names):
             raise RuntimeError(
-                'ERROR: Requested info for package %s but got %d results' % (
-                    pkg_name, len(j['results'])
+                'ERROR: Requested info for %d packages but got %d results' % (
+                    len(pkg_names), len(j['results'])
                 )
             )
         logger.debug('AUR response: %s', r.content)
-        return j['results'][0]['Version']
+        return {
+            x['Name']: x['Version'] for x in j['results']
+        }
 
 
 def parse_args(argv):
