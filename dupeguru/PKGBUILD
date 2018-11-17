@@ -1,24 +1,36 @@
-# Maintainer: Virgil Dupras <hsoft@hardcoded.net>
+# Maintainer: fuan_k <rrkay at posteo dot net>
 # Maintainer: Bijaya Dangol <dangoldbj23@gmail.com>
+# Maintainer: Virgil Dupras <hsoft@hardcoded.net>
 pkgname=dupeguru
 pkgver=4.0.3
-pkgrel=3
+pkgrel=5
 pkgdesc="Find duplicate files on your system"
 arch=(any)
-url="http://www.hardcoded.net/dupeguru/"
+url="https://dupeguru.voltaicideas.net/"
 license=('BSD')
 depends=('python' 'python-pyqt5' 'libxkbcommon-x11' 'python-polib' 'python-send2trash' 'python-hsaudiotag3k')
 makedepends=(
     python-sphinx
 )
 source=(
-    http://download.hardcoded.net/$pkgname-src-$pkgver.tar.gz
+    https://download.hardcoded.net/$pkgname-src-$pkgver.tar.gz
 )
 md5sums=(
 'ed3b4a049c436cacb0a068438a8d6131'
 )
 provides=("dupeguru")
 conflicts=("dupeguru-se" "dupeguru-pe" "dupeguru-me")
+
+prepare(){
+  # Temporary fix for python3.7 handling of old syntax
+  cd "$srcdir"
+  sed -i -e '277 a\\            try:'\
+ -e '278s/^/    /'\
+ -e '279s/^/    /'\
+ -e '280s/^/    /'\
+ -e '280a\\            except StopIteration:'\
+ -e '280a\\                return' hscommon/build.py
+}
 
 build() {
   cd "$srcdir"
@@ -33,6 +45,8 @@ build() {
 package() {
   cd "$srcdir"
   
+  cp -R "help" "build"
+  cp -R "locale" "build"
   python package.py --arch-pkg
   cd "build/${pkgname}-arch"
 
