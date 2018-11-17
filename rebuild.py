@@ -137,6 +137,7 @@ class ArchRebuilder(object):
         )
         logger.info('Moving package to: %s', newpath)
         os.rename(os.path.realpath(packages[0]), newpath)
+        os.chdir(self._topdir)
 
     def prune_repo(self, name_ver_to_keep):
         logger.info('Pruning old packages from repo...')
