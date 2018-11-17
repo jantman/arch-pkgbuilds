@@ -20,6 +20,7 @@ FORMAT = "[%(asctime)s %(levelname)s] %(message)s"
 logging.basicConfig(level=logging.WARNING, format=FORMAT)
 logger = logging.getLogger()
 
+IGNORE_PACKAGES = ['lego-git']
 
 class ArchRebuilder(object):
 
@@ -40,6 +41,8 @@ class ArchRebuilder(object):
             curr = pkginfo.get(name, {'VERSION': 'NONE'})['VERSION']
             latest = latest_versions[name]
             logger.info('Package %s current=%s latest=%s', name, curr, latest)
+            if name in IGNORE_PACKAGES:
+                continue
             if curr != latest:
                 to_upgrade.append(name)
         logger.info(
