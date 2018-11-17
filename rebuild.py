@@ -48,8 +48,8 @@ class ArchRebuilder(object):
         keep_versions = []
         for pkgname in to_upgrade:
             keep_versions.append((pkgname, latest_versions[pkgname]))
-            ver = self._update_pkg(pkgname)
-            self._build_pkg(pkgname, ver)
+            self._update_pkg(pkgname)
+            self._build_pkg(pkgname)
         logger.info('Successfully built all %d packages', len(to_upgrade))
         self.prune_repo(keep_versions)
 
@@ -89,7 +89,6 @@ class ArchRebuilder(object):
                 r.returncode, r.stdout.decode()
             ))
         logger.info('%s updated to %s (AUR commit %s)', pkg_name, pkver, rev)
-        return pkver
 
     def _run_cmd(self, cmd, cwd=None):
         if cwd is None:
