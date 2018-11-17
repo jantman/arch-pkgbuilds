@@ -107,7 +107,7 @@ class ArchRebuilder(object):
             )
         return p
 
-    def _build_pkg(self, pkg_name, pkg_ver):
+    def _build_pkg(self, pkg_name):
         logger.info('Building: %s', pkg_name)
         os.chdir(os.path.join(self._topdir, pkg_name))
         before_files = glob('**/*', recursive=True)
@@ -120,6 +120,14 @@ class ArchRebuilder(object):
             set(glob('**/*', recursive=True)) - set(before_files)
         )
         logger.debug('makepkg generated new files: %s', new_files)
+        # for packages build from git, get the version after building
+        pkg_ver = self._run_cmd(
+            [
+                '/bin/bash',
+                '-c',
+                'source PKGBUILD && echo "${pkgver}-${pkgrel}"'
+            ]
+        ).stdout.decode().strip()
         packages = [
             x for x in new_files if x.startswith('%s-%s-' % (pkg_name, pkg_ver))
             and x.endswith('.pkg.tar.xz')
