@@ -11,6 +11,6 @@ My PKGBUILDs for Arch Linux
 ## Rebuilding / Updating
 
 1. ``export BASEREV=$(git rev-parse HEAD)``
-2. ``python3 rebuild.py``
+2. ``python3 rebuild.py -v repo/jantman.db.tar.gz``
 3. Verify the changes look acceptable: ``git diff $BASEREV HEAD``
 4. Assuming everything looks right, update the repo and sync to S3: ``./update_sync.sh``
