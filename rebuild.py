@@ -14,6 +14,7 @@ import os
 import requests
 import subprocess
 import tarfile
+import shutil
 
 FORMAT = "[%(asctime)s %(levelname)s] %(message)s"
 logging.basicConfig(level=logging.WARNING, format=FORMAT)
@@ -23,7 +24,8 @@ logger = logging.getLogger()
 class ArchRebuilder(object):
 
     def __init__(self, repofile):
-        self._repofile = repofile
+        self._repofile = os.path.realpath(os.path.abspath(repofile))
+        self._topdir = os.path.realpath(os.path.dirname(__file__))
 
     def run(self):
         """ do stuff here """
@@ -43,33 +45,130 @@ class ArchRebuilder(object):
         logger.info(
             'Found %d packages to update: %s', len(to_upgrade), to_upgrade
         )
+        failed = []
+        keep_versions = []
         for pkgname in to_upgrade:
-            self._update_pkg(pkgname)
-            self._build_pkg(pkgname)
-        self.prune_repo()
+            keep_versions.append((pkgname, latest_versions[pkgname]))
+            try:
+                ver = self._update_pkg(pkgname)
+                self._build_pkg(pkgname, ver)
+            except Exception:
+                failed.append(pkgname)
+                keep_versions.append((
+                    pkgname,
+                    pkginfo.get(pkgname, {'VERSION': 'NONE'})['VERSION']
+                ))
+                logger.error('FAILED BUILDING %s', pkgname, exc_info=True)
+        if len(failed) > 0:
+            logger.error(
+                'Failed building %d of %d packages: %s', len(failed),
+                len(to_upgrade), failed
+            )
+            raise SystemExit(1)
+        logger.info('Successfully built all %d packages', len(to_upgrade))
+        self.prune_repo(keep_versions)
 
     def _update_pkg(self, pkg_name):
-        raise NotImplementedError()
+        logger.info('Updating package: %s', pkg_name)
+        dest_dir = os.path.join(self._topdir, pkg_name)
+        if os.path.exists(dest_dir):
+            logger.debug('Removing existing directory: %s', dest_dir)
+            shutil.rmtree(dest_dir)
+        assert self._run_cmd([
+            'git', 'clone', '--depth=1',
+            'https://aur.archlinux.org/%s.git' % pkg_name, dest_dir
+        ]).returncode == 0
+        rev = self._run_cmd(
+            ['git', 'rev-parse', 'HEAD'], cwd=dest_dir
+        ).stdout.decode().strip()
+        pkver = self._run_cmd(
+            [
+                '/bin/bash',
+                '-c',
+                'source PKGBUILD && echo "${pkgver}-${pkgrel}"'
+            ],
+            cwd=dest_dir
+        ).stdout.decode().strip()
+        assert self._run_cmd(['git', 'add', dest_dir]).returncode == 0
+        assert self._run_cmd([
+            'git', 'commit', '-m',
+            'rebuild.py - pull in %s-%s from AUR at commit %s' % (
+                pkg_name, pkver, rev
+            )
+        ]).returncode == 0
+        logger.info('%s updated to %s (AUR commit %s)', pkg_name, pkver, rev)
+        return pkver
 
-    def _build_pkg(self, pkg_name):
-        raise NotImplementedError()
-        # self._copy_to_repo(fname)
+    def _run_cmd(self, cmd, cwd=None):
+        if cwd is None:
+            logger.debug('Executing: %s', ' '.join(cmd))
+        else:
+            logger.debug('Executing in %s: %s', cwd, ' '.join(cmd))
+        p = subprocess.run(
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=cwd
+        )
+        logger.debug('Command exited %d: %s', p.returncode, p.stdout.decode())
+        return p
 
-    def _copy_to_repo(self, fname):
-        raise NotImplementedError()
+    def _build_pkg(self, pkg_name, pkg_ver):
+        logger.info('Building: %s', pkg_name)
+        os.chdir(os.path.join(self._topdir, pkg_name))
+        before_files = glob('**/*', recursive=True)
+        p = self._run_cmd(['makepkg'])
+        if p.returncode != 0:
+            raise RuntimeError(
+                'makepkg for %s failed:\n%s' % (pkg_name, p.stdout.decode())
+            )
+        new_files = list(
+            set(glob('**/*', recursive=True)) - set(before_files)
+        )
+        logger.debug('makepkg generated new files: %s', new_files)
+        packages = [
+            x for x in new_files if x.startswith('%s-%s-' % (pkg_name, pkg_ver))
+            and x.endswith('.pkg.tar.xz')
+        ]
+        if len(packages) != 1:
+            raise RuntimeError(
+                'ERROR: Unable to find built package from %d candidates: %s' % (
+                    len(packages), packages
+                )
+            )
+        logger.info('Built package: %s', os.path.realpath(packages[0]))
+        newpath = os.path.join(
+            os.path.dirname(os.path.realpath(self._repofile)),
+            os.path.basename(packages[0])
+        )
+        logger.info('Moving package to: %s', newpath)
+        os.rename(os.path.realpath(packages[0]), newpath)
 
-    def prune_repo(self):
-        raise NotImplementedError()
+    def prune_repo(self, name_ver_to_keep):
+        logger.info('Pruning old packages from repo...')
+        logger.debug('Keep: %s', name_ver_to_keep)
+        repodir = os.path.dirname(self._repofile)
+        repofiles = [os.path.basename(x) for x in glob(
+            os.path.join(repodir, '*.pkg.tar.xz')
+        )]
+        logger.info('Found %d packages currently in repo', len(repofiles))
+        logger.debug('Files in repo: %s', repofiles)
+        for pkname, pkver in name_ver_to_keep:
+            for arch in ['x86_64', 'any']:
+                fname = '%s-%s-%s.pkg.tar.xz' % (pkname, pkver, arch)
+                if fname in repofiles:
+                    repofiles.remove(fname)
+        logger.info(
+            'Found %d orphaned packages to remove: %s',
+            len(repofiles), repofiles
+        )
+        for fname in repofiles:
+            p = os.path.join(repodir, fname)
+            logger.warning('Unlink: %s', p)
+            os.unlink(p)
 
     def _list_packages(self):
         """Return a list of string package names in pwd"""
         res = []
         logger.debug('Listing packages in repo directory')
-        for fname in glob(
-            os.path.join(
-                os.path.realpath(os.path.dirname(__file__)), '*', 'PKGBUILD'
-            )
-        ):
+        for fname in glob(os.path.join(self._topdir, '*', 'PKGBUILD')):
             res.append(fname.split('/')[-2])
         return sorted(res)
 
