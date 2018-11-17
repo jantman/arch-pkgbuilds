@@ -54,7 +54,6 @@ class ArchRebuilder(object):
             self._update_pkg(pkgname)
             self._build_pkg(pkgname)
         logger.info('Successfully built all %d packages', len(to_upgrade))
-        self.prune_repo(keep_versions)
 
     def _update_pkg(self, pkg_name):
         logger.info('Updating package: %s', pkg_name)
