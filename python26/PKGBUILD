@@ -4,20 +4,19 @@
 
 pkgname=python26
 pkgver=2.6.9
-pkgrel=10
+pkgrel=14
 _pybasever=2.6
 pkgdesc="Legacy version Python 2.6 of the high-level scripting language"
 arch=('i686' 'x86_64' 'arm')
 license=('PSF')
-url="http://www.python.org/"
-depends=('db>=4.8' 'bzip2' 'gdbm' 'openssl' 'zlib' 'expat' 'sqlite3' 'libffi')
+url="https://www.python.org/"
+depends=('db>=4.8' 'bzip2' 'gdbm' 'openssl-1.0' 'zlib' 'expat' 'sqlite3' 'libffi')
 makedepends=('gcc5' 'tk>=8.5.0')
 optdepends=('tk: for IDLE, pynche and modulator'
             'net-tools: arp, ifconfig and netstat are used in the uuid module')
 checkdepends=('net-tools')
-provides=(python2=${pkgver})
 changelog=ChangeLog
-source=(http://www.python.org/ftp/python/${pkgver}/Python-${pkgver}.tar.xz
+source=(https://www.python.org/ftp/python/${pkgver}/Python-${pkgver}.tar.xz
         modulator-launcher
         pynche-launcher
         python-2.6-db-4.8.patch
@@ -55,34 +54,34 @@ prepare() {
 
   patch -Np0 -i ${srcdir}/python-2.6-internal-expat.patch
 
-  # http://bugs.python.org/issue6949
+  # https://bugs.python.org/issue6949
   patch -Np0 -i ${srcdir}/python-2.6-db-4.8.patch
 
   patch -Np0 -i ${srcdir}/python-2.6-dbm.patch
 
-  # http://bugs.python.org/issue10126
+  # https://bugs.python.org/issue10126
   patch -Np1 -i ${srcdir}/python-2.6-distutils.patch
 
-  # http://bugs.python.org/issue7759
+  # https://bugs.python.org/issue7759
   patch -Np1 -i ${srcdir}/python-2.6-mhlib-nlinks.patch
 
-  # http://bugs.python.org/issue9054
+  # https://bugs.python.org/issue9054
   patch -Np1 -i ${srcdir}/python-2.6-pyexpat-segfault.patch
 
-  # http://bugs.python.org/issue20374
+  # https://bugs.python.org/issue20374
   patch -Np1 -i ${srcdir}/python-2.6-readline-6.3.patch
 
-  # http://bugs.python.org/issue20901
+  # https://bugs.python.org/issue20901
   patch -Np1 -i ${srcdir}/python-2.6-sqlite-test.patch
 
   patch -Np1 -i ${srcdir}/python-2.6-ssl-nosslv3.patch
 
   patch -Np1 -i ${srcdir}/python-2.6-tkinter-86.patch
 
-  # http://bugs.python.org/issue13007
+  # https://bugs.python.org/issue13007
   patch -Np1 -i ${srcdir}/python-2.6-whichdb-gdbm-1.9.patch
 
-  # http://bugs.python.org/issue27369
+  # https://bugs.python.org/issue27369
   patch -Np0 -i ${srcdir}/python-2.6-expat-2.2.patch
 
   # CPython SVN r86565
@@ -97,8 +96,13 @@ prepare() {
 build() {
   cd "${srcdir}/Python-${pkgver}"
 
+  # pacman 5.0.2-2 adds -fno-plt to default makepkg flags, which is unsupported by gcc5
+  export CFLAGS="${CFLAGS/-fno-plt/}"
+  export CXXFLAGS="${CXXFLAGS/-fno-plt/}"
+
   export OPT="${CFLAGS}"
-  export CPPFLAGS="-DOPENSSL_NO_SSL3"
+  export CPPFLAGS="${CPPFLAGS} -DOPENSSL_NO_SSL3 -I/usr/include/openssl-1.0"
+  export LDFLAGS="${LDFLAGS} -L/usr/lib/openssl-1.0"
   # A lot of tests fail under GCC >= 6.x
   export CPP="cpp-5"
   export CC="gcc-5"
@@ -132,10 +136,10 @@ check() {
 
   if [ "x$CARCH" = "xarm" ]; then
     # test_float fails on arm
-    # issue with no fix: http://bugs.python.org/issue8265
-    LD_LIBRARY_PATH="$(pwd)" ./python Lib/test/regrtest.py -x test_float
+    # issue with no fix: https://bugs.python.org/issue8265
+    LD_LIBRARY_PATH="$(pwd)" ./python Lib/test/regrtest.py -x test_float -w
   else
-    make test
+    make test EXTRATESTOPTS="-w"
   fi
 }
 
@@ -179,7 +183,7 @@ package() {
   mv "${pkgdir}"/usr/bin/idle{,${_pybasever}}
   mv "${pkgdir}"/usr/bin/pydoc{,${_pybasever}}
   mv "${pkgdir}"/usr/bin/2to3{,-${_pybasever}}
-  mv "${pkgdir}"/usr/share/man/man1/python{.1,${pkgver}}
+  mv "${pkgdir}"/usr/share/man/man1/python{,${_pybasever}}.1
 
   # clean up #!s
   find "${pkgdir}/usr/lib/python${_pybasever}/" -name '*.py' | xargs sed -i \
