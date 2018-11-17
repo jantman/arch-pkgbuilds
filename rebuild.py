@@ -128,7 +128,10 @@ class ArchRebuilder(object):
             ]
         ).stdout.decode().strip()
         packages = [
-            x for x in new_files if x.startswith('%s-%s-' % (pkg_name, pkg_ver))
+            x for x in new_files if (
+                x.startswith('%s-%s-' % (pkg_name, pkg_ver)) or
+                x.startswith('%s-1:%s-' % (pkg_name, pkg_ver))
+            )
             and x.endswith('.pkg.tar.xz')
         ]
         if len(packages) != 1:
