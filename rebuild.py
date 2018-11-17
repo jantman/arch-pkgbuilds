@@ -45,26 +45,11 @@ class ArchRebuilder(object):
         logger.info(
             'Found %d packages to update: %s', len(to_upgrade), to_upgrade
         )
-        failed = []
         keep_versions = []
         for pkgname in to_upgrade:
             keep_versions.append((pkgname, latest_versions[pkgname]))
-            try:
-                ver = self._update_pkg(pkgname)
-                self._build_pkg(pkgname, ver)
-            except Exception:
-                failed.append(pkgname)
-                keep_versions.append((
-                    pkgname,
-                    pkginfo.get(pkgname, {'VERSION': 'NONE'})['VERSION']
-                ))
-                logger.error('FAILED BUILDING %s', pkgname, exc_info=True)
-        if len(failed) > 0:
-            logger.error(
-                'Failed building %d of %d packages: %s', len(failed),
-                len(to_upgrade), failed
-            )
-            raise SystemExit(1)
+            ver = self._update_pkg(pkgname)
+            self._build_pkg(pkgname, ver)
         logger.info('Successfully built all %d packages', len(to_upgrade))
         self.prune_repo(keep_versions)
 
