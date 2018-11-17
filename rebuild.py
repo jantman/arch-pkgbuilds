@@ -108,6 +108,11 @@ class ArchRebuilder(object):
             cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=cwd
         )
         logger.debug('Command exited %d: %s', p.returncode, p.stdout.decode())
+        if p.returncode != 0:
+            logger.warning(
+                'Command %s exited %d:\n%s', ' '.join(cmd),
+                p.returncode, p.stdout.decode()
+            )
         return p
 
     def _build_pkg(self, pkg_name, pkg_ver):
