@@ -75,12 +75,19 @@ class ArchRebuilder(object):
             cwd=dest_dir
         ).stdout.decode().strip()
         assert self._run_cmd(['git', 'add', dest_dir]).returncode == 0
-        assert self._run_cmd([
+        r = self._run_cmd([
             'git', 'commit', '-m',
             'rebuild.py - pull in %s-%s from AUR at commit %s' % (
                 pkg_name, pkver, rev
             )
-        ]).returncode == 0
+        ])
+        if (
+            r.returncode != 0 and
+            'nothing to commit, working tree clean' not in r.stdout.decode()
+        ):
+            raise RuntimeError('ERROR: git commit failed %d:\n%s' % (
+                r.returncode, r.stdout.decode()
+            ))
         logger.info('%s updated to %s (AUR commit %s)', pkg_name, pkver, rev)
         return pkver
 
