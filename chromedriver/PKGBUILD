@@ -1,18 +1,19 @@
-# Maintainer: grimsock <lord.grimsock at gmail dot com>
+# Maintainer: JunYoung Gwak <i@jgwak.com>
+# Contributor: grimsock <lord.grimsock at gmail dot com>
 # Contributor: James An <james@jamesan.ca>
 # Contributor: lybin
 
 pkgname=chromedriver
-pkgver=2.42
+pkgver=73.0.3683.68
 pkgrel=1
-pkgdesc="Standalone server which implements WebDriver's wire protocol"
-arch=('i686' 'x86_64')
+pkgdesc="Standalone server which implements WebDriver's wire protocol (for google-chrome)"
+arch=('x86_64')
 url="https://sites.google.com/a/chromium.org/chromedriver/"
 license=('Apache')
 conflicts=('chromium')
 depends=('libpng' 'gconf')
 optdepends=('google-chrome')
-md5sums=('acfcc29fb03df9e913ef4c360a121ad1')
+md5sums=('16d6ef61ff19649df9251d742ed85c62')
 
 source=("${pkgname}_${pkgver}_linux64.zip::http://chromedriver.storage.googleapis.com/${pkgver}/${pkgname}_linux64.zip")
 
