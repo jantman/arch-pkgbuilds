@@ -1,9 +1,10 @@
 # Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 # Maintainer: Tobias Powalowski <tpowa@archlinux.org>
 # Maintainer: Thomas Baechler <thomas@archlinux.org>
+# Maintainer: Jason Antman <jason@jasonantman.com>
 
-pkgbase=linux               # Build stock -ARCH kernel
-#pkgbase=linux-custom       # Build kernel with a different name
+#pkgbase=linux               # Build stock -ARCH kernel
+pkgbase=linux-precision5530       # Build kernel with a different name
 _srcver=5.0.3-arch1
 pkgver=${_srcver//-/.}
 pkgrel=1
@@ -19,6 +20,7 @@ source=(
   60-linux.hook  # pacman hook for depmod
   90-linux.hook  # pacman hook for initramfs regeneration
   linux.preset   # standard config files for mkinitcpio ramdisk
+  Precision-i915-force-edp-wide.patch # Precision5530 i915 patch from https://bugs.freedesktop.org/show_bug.cgi?id=109959#c18
 )
 validpgpkeys=(
   'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds
@@ -29,7 +31,8 @@ sha256sums=('SKIP'
             'df2ce998b050c707950c555f7f6ec0efcb8498fca10b4bce45f681844c8aa0ab'
             'ae2e95db94ef7176207c690224169594d49445e04249d2499e9d2fbc117a0b21'
             'c043f3033bb781e2688794a59f6d1f7ed49ef9b13eb77ff9a425df33a244a636'
-            'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65')
+            'ad6344badc91ad0630caacde83f7f9b97276f80d26a20619a87952be65492c65'
+            '6e9ff72497a6ba29f832d311b590d1d09d71b513f24930d615be66bfbb428029')
 
 _kernelname=${pkgbase#linux}
 : ${_kernelname:=-ARCH}
@@ -65,10 +68,10 @@ build() {
 }
 
 _package() {
-  pkgdesc="The ${pkgbase/linux/Linux} kernel and modules"
-  [[ $pkgbase = linux ]] && groups=(base)
+  pkgdesc="The ${pkgbase/linux/Linux} kernel and modules with Dell Precision 5530 patches"
   depends=(coreutils linux-firmware kmod mkinitcpio)
   optdepends=('crda: to set the correct wireless channels of your country')
+  provides=("linux-precision5530=${pkgver}")
   backup=("etc/mkinitcpio.d/$pkgbase.preset")
   install=linux.install
 
@@ -122,6 +125,8 @@ _package() {
 
 _package-headers() {
   pkgdesc="Header files and scripts for building modules for ${pkgbase/linux/Linux} kernel"
+  depends=('linux-precision5530') # added to keep kernel and headers packages matched
+  provides=("linux-precision5530-headers=${pkgver}" "linux-headers=${pkgver}")
 
   local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
 
