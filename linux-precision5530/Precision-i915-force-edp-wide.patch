@@ -1,58 +1,13 @@
-diff --git a/drivers/gpu/drm/i915/i915_params.c b/drivers/gpu/drm/i915/i915_params.c
-index b5be0abbba35..d128c110b2b2 100644
---- a/drivers/gpu/drm/i915/i915_params.c
-+++ b/drivers/gpu/drm/i915/i915_params.c
-@@ -114,6 +114,9 @@ i915_param_named_unsafe(force_reset_modeset_test, bool, 0600,
- 	"Force a modeset during gpu reset for testing (default:false). "
- 	"For developers only.");
-
-+i915_param_named(force_edp_wide, bool, 0600,
-+	"Force eDP configuration to use slow and wide method (default:false).");
-+
- i915_param_named_unsafe(invert_brightness, int, 0600,
- 	"Invert backlight brightness "
- 	"(-1 force normal, 0 machine defaults, 1 force inversion), please "
-diff --git a/drivers/gpu/drm/i915/i915_params.h b/drivers/gpu/drm/i915/i915_params.h
-index 3f14e9881a0d..0b16c75b834a 100644
---- a/drivers/gpu/drm/i915/i915_params.h
-+++ b/drivers/gpu/drm/i915/i915_params.h
-@@ -70,6 +70,7 @@ struct drm_printer;
- 	param(bool, prefault_disable, false) \
- 	param(bool, load_detect_test, false) \
- 	param(bool, force_reset_modeset_test, false) \
-+	param(bool, force_edp_wide, false) \
- 	param(bool, error_capture, true) \
- 	param(bool, disable_display, false) \
- 	param(bool, verbose_state_checks, true) \
 diff --git a/drivers/gpu/drm/i915/intel_dp.c b/drivers/gpu/drm/i915/intel_dp.c
-index cf709835fb9a..51044630d9e4 100644
+index 22a74608c6e4..cdc534b706fd 100644
 --- a/drivers/gpu/drm/i915/intel_dp.c
 +++ b/drivers/gpu/drm/i915/intel_dp.c
-@@ -41,6 +41,7 @@
- #include "intel_drv.h"
- #include <drm/i915_drm.h>
- #include "i915_drv.h"
-+#include "i915_params.h"
-
- #define DP_DPRX_ESI_LEN 14
-
-@@ -2053,7 +2054,7 @@ intel_dp_compute_link_config(struct intel_encoder *encoder,
+@@ -2035,7 +2035,7 @@ intel_dp_compute_link_config(struct intel_encoder *encoder,
  		      intel_dp->common_rates[limits.max_clock],
  		      limits.max_bpp, adjusted_mode->crtc_clock);
 
 -	if (intel_dp_is_edp(intel_dp))
-+	if (!i915_modparams.force_edp_wide && intel_dp_is_edp(intel_dp))
++	if (false && intel_dp_is_edp(intel_dp))
  		/*
  		 * Optimize for fast and narrow. eDP 1.3 section 3.3 and eDP 1.4
  		 * section A.1: "It is recommended that the minimum number of
-@@ -2066,7 +2067,10 @@ intel_dp_compute_link_config(struct intel_encoder *encoder,
- 		ret = intel_dp_compute_link_config_fast(intel_dp, pipe_config,
- 							&limits);
- 	else
--		/* Optimize for slow and wide. */
-+		/* Optimize for slow and wide.
-+		 *
-+		 * Note that some machines need to do this and this can be forced.
-+		 */
- 		ret = intel_dp_compute_link_config_wide(intel_dp, pipe_config,
- 							&limits);
