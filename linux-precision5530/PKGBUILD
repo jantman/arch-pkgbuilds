@@ -9,7 +9,7 @@ _srcver=5.0.3-arch1
 pkgver=${_srcver//-/.}
 pkgrel=2
 arch=(x86_64)
-url="https://git.archlinux.org/linux.git/log/?h=v$_srcver"
+url="https://github.com/jantman/arch-pkgbuilds/tree/master/linux-precision5530"
 license=(GPL2)
 makedepends=(xmlto kmod inetutils bc libelf git python-sphinx graphviz)
 options=('!strip')
