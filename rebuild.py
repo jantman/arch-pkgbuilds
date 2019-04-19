@@ -20,7 +20,7 @@ FORMAT = "[%(asctime)s %(levelname)s] %(message)s"
 logging.basicConfig(level=logging.WARNING, format=FORMAT)
 logger = logging.getLogger()
 
-IGNORE_PACKAGES = ['lego-git']
+IGNORE_PACKAGES = ['lego-git', 'linux-precision5530']
 
 class ArchRebuilder(object):
 
