@@ -41,8 +41,6 @@ class ArchRebuilder(object):
             curr = pkginfo.get(name, {'VERSION': 'NONE'})['VERSION']
             latest = latest_versions[name]
             logger.info('Package %s current=%s latest=%s', name, curr, latest)
-            if name in IGNORE_PACKAGES:
-                continue
             if curr != latest:
                 to_upgrade.append(name)
         logger.info(
@@ -179,7 +177,9 @@ class ArchRebuilder(object):
         res = []
         logger.debug('Listing packages in repo directory')
         for fname in glob(os.path.join(self._topdir, '*', 'PKGBUILD')):
-            res.append(fname.split('/')[-2])
+            tmp = fname.split('/')[-2]
+            if tmp not in IGNORE_PACKAGES:
+                res.append(tmp)
         return sorted(res)
 
     def read_repo_file(self):
