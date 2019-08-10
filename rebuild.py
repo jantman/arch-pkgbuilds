@@ -235,9 +235,13 @@ class ArchRebuilder(object):
                 'ERROR getting info for package %s: %s', pkg_name, r.content
             )
         if len(j['results']) != len(pkg_names):
+            diff = set(pkg_names).difference(
+                set([x['Name'] for x in j['results']])
+            )
             raise RuntimeError(
-                'ERROR: Requested info for %d packages but got %d results' % (
-                    len(pkg_names), len(j['results'])
+                'ERROR: Requested info for %d packages but got %d results; '
+                'missing from query results: %s' % (
+                    len(pkg_names), len(j['results']), diff
                 )
             )
         logger.debug('AUR response: %s', r.content)
