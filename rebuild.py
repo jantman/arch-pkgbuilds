@@ -49,8 +49,8 @@ class ArchRebuilder(object):
         keep_versions = []
         for pkgname in to_upgrade:
             keep_versions.append((pkgname, latest_versions[pkgname]))
-            self._update_pkg(pkgname)
-            self._build_pkg(pkgname)
+            rev = self._update_pkg(pkgname)
+            self._build_pkg(pkgname, rev)
         logger.info('Successfully built all %d packages', len(to_upgrade))
 
     def _update_pkg(self, pkg_name):
@@ -75,20 +75,8 @@ class ArchRebuilder(object):
             cwd=dest_dir
         ).stdout.decode().strip()
         assert self._run_cmd(['git', 'add', dest_dir]).returncode == 0
-        r = self._run_cmd([
-            'git', 'commit', '-m',
-            'rebuild.py - pull in %s-%s from AUR at commit %s' % (
-                pkg_name, pkver, rev
-            )
-        ])
-        if (
-            r.returncode != 0 and
-            'nothing to commit, working tree clean' not in r.stdout.decode()
-        ):
-            raise RuntimeError('ERROR: git commit failed %d:\n%s' % (
-                r.returncode, r.stdout.decode()
-            ))
         logger.info('%s updated to %s (AUR commit %s)', pkg_name, pkver, rev)
+        return rev
 
     def _run_cmd(self, cmd, cwd=None):
         if cwd is None:
@@ -106,7 +94,7 @@ class ArchRebuilder(object):
             )
         return p
 
-    def _build_pkg(self, pkg_name):
+    def _build_pkg(self, pkg_name, rev):
         logger.info('Building: %s', pkg_name)
         os.chdir(os.path.join(self._topdir, pkg_name))
         before_files = glob('**/*', recursive=True)
@@ -147,6 +135,20 @@ class ArchRebuilder(object):
         )
         logger.info('Moving package to: %s', newpath)
         os.rename(os.path.realpath(packages[0]), newpath)
+        assert self._run_cmd(['git', 'add', '.']).returncode == 0
+        r = self._run_cmd([
+            'git', 'commit', '-m',
+            'rebuild.py - pull in %s-%s from AUR at commit %s' % (
+                pkg_name, pkg_ver, rev
+            )
+        ])
+        if (
+            r.returncode != 0 and
+            'nothing to commit, working tree clean' not in r.stdout.decode()
+        ):
+            raise RuntimeError('ERROR: git commit failed %d:\n%s' % (
+                r.returncode, r.stdout.decode()
+            ))
         os.chdir(self._topdir)
 
     def prune_repo(self, name_ver_to_keep):
