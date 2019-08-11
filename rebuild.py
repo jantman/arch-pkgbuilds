@@ -28,7 +28,7 @@ class ArchRebuilder(object):
         self._repofile = os.path.realpath(os.path.abspath(repofile))
         self._topdir = os.path.realpath(os.path.dirname(__file__))
 
-    def run(self):
+    def run(self, skip_packages=[]):
         """ do stuff here """
         pkgnames = self._list_packages()
         logger.info(
@@ -41,6 +41,9 @@ class ArchRebuilder(object):
             curr = pkginfo.get(name, {'VERSION': 'NONE'})['VERSION']
             latest = latest_versions[name]
             logger.info('Package %s current=%s latest=%s', name, curr, latest)
+            if name in skip_packages:
+                print('Skipping: %s' % name)
+                continue
             if curr != latest:
                 to_upgrade.append(name)
         logger.info(
@@ -262,6 +265,8 @@ def parse_args(argv):
     p = argparse.ArgumentParser(description='Arch rebuild script')
     p.add_argument('-v', '--verbose', dest='verbose', action='count', default=0,
                    help='verbose output. specify twice for debug-level output.')
+    p.add_argument('-s', '--skip', dest='skip', action='append', default=[],
+                   help='Skip building these package(s)')
     p.add_argument('REPO_TAR_GZ', action='store', type=str,
                    help='Path to repo .tar.gz file')
     args = p.parse_args(argv)
@@ -304,4 +309,4 @@ if __name__ == "__main__":
     elif args.verbose == 1:
         set_log_info()
 
-    ArchRebuilder(args.REPO_TAR_GZ).run()
+    ArchRebuilder(args.REPO_TAR_GZ).run(args.skip)
