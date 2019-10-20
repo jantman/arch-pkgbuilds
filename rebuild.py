@@ -123,7 +123,9 @@ class ArchRebuilder(object):
                 x.startswith('%s-%s-' % (pkg_name, pkg_ver)) or
                 x.startswith('%s-1:%s-' % (pkg_name, pkg_ver))
             )
-            and x.endswith('.pkg.tar.xz')
+            and (
+                x.endswith('.pkg.tar.xz') or x.endswith('.pkg.tar.zst')
+            )
         ]
         if len(packages) != 1:
             raise RuntimeError(
@@ -161,11 +163,17 @@ class ArchRebuilder(object):
         repofiles = [os.path.basename(x) for x in glob(
             os.path.join(repodir, '*.pkg.tar.xz')
         )]
+        repofiles.extend([os.path.basename(x) for x in glob(
+            os.path.join(repodir, '*.pkg.tar.zst')
+        )])
         logger.info('Found %d packages currently in repo', len(repofiles))
         logger.debug('Files in repo: %s', repofiles)
         for pkname, pkver in name_ver_to_keep:
             for arch in ['x86_64', 'any']:
                 fname = '%s-%s-%s.pkg.tar.xz' % (pkname, pkver, arch)
+                if fname in repofiles:
+                    repofiles.remove(fname)
+                fname = '%s-%s-%s.pkg.tar.zst' % (pkname, pkver, arch)
                 if fname in repofiles:
                     repofiles.remove(fname)
         logger.info(

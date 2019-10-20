@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-repo-add -R -n repo/jantman.db.tar.gz repo/*.pkg.tar.xz
+repo-add -R -n repo/jantman.db.tar.gz repo/*.pkg.tar.xz repo/*.pkg.tar.zst
 source ~/venvs/current/bin/activate
 python arch_repo_index.py -vv -b http://archrepo.jasonantman.com/current/ -o repo/index.html repo/jantman.db.tar.gz
 ~/bin/aws s3 sync repo s3://archrepo.jasonantman.com/current/ --delete
