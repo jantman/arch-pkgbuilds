@@ -1,0 +1,32 @@
+pkgbase = entangle
+	pkgdesc = Entangle is an application which uses GTK and libgphoto2 to provide a graphical interface for tethered photography with digital cameras.
+	pkgver = 2.0
+	pkgrel = 2
+	url = http://entangle-photo.org/
+	install = entangle.install
+	arch = i686
+	arch = x86_64
+	license = GPL
+	makedepends = intltool
+	makedepends = meson
+	makedepends = gtk-doc
+	depends = glib2>=2.26.0
+	depends = dbus-glib>=0.60
+	depends = gdk-pixbuf2>=2.12.0
+	depends = gtk3>=3.22.0
+	depends = libgphoto2>=2.4.11
+	depends = libgudev
+	depends = gobject-introspection
+	depends = lcms2
+	depends = libpeas
+	depends = libgexiv2
+	depends = libraw
+	depends = adwaita-icon-theme
+	depends = gstreamer
+	depends = itstool
+	depends = gst-plugins-base-libs
+	source = http://entangle-photo.org/download/sources/entangle-2.0.tar.xz
+	md5sums = 12049cc192bc1c9ec5fd668921061776
+
+pkgname = entangle
+
