@@ -1,10 +1,15 @@
 post_install() {
-  cat << 'EOM'
-  --> Please cd to /opt/fah/ and execute ./FAHClient --configure
-  --> as root to configure your settings. If you are using systemd, 
-  --> then run "systemctl enable foldingathome.service" to enable
-  --> the folding service. If you would like join the Arch Linux
-  --> team, use team number 45032.  
-EOM
+  cat << 'EOF'
+  --> To start folding, please enable and start foldingathome.service.
+  --> If you have an NVIDIA GPU, please first enable and start
+  --> foldingathome-nvidia.service.
+  --> To join the Arch Linux team, please use team number 45032.
+EOF
+}
+
+post_upgrade() {
+  cat << 'EOF'
+  --> Please migrate your configuration to /etc/foldingathome/config.xml.
+EOF
 }
 
