@@ -1,0 +1,14 @@
+pkgbase = wakeonlan
+	pkgdesc = Utility for waking up computers using UDP Wake-on-Lan packets
+	pkgver = 0.41
+	pkgrel = 5
+	url = https://github.com/jpoliv/wakeonlan/
+	arch = any
+	license = GPL
+	depends = perl
+	options = docs
+	source = https://github.com/jpoliv/wakeonlan/archive/wakeonlan-0.41.tar.gz
+	md5sums = 80182e67cc1ce471463b18a16f5476c4
+
+pkgname = wakeonlan
+
