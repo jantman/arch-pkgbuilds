@@ -58,6 +58,7 @@ class ArchRebuilder(object):
             rev = self._update_pkg(pkgname)
             self._build_pkg(pkgname, rev)
         logger.info('Successfully built all %d packages', len(to_upgrade))
+        self.prune_repo(keep_versions)
 
     def _update_pkg(self, pkg_name):
         logger.info('Updating package: %s', pkg_name)
@@ -181,12 +182,12 @@ class ArchRebuilder(object):
                     repofiles.remove(fname)
         logger.info(
             'Found %d orphaned packages to remove: %s',
-            len(repofiles), repofiles
+            len(repofiles), ' '.join(repofiles)
         )
         for fname in repofiles:
             p = os.path.join(repodir, fname)
             logger.warning('Unlink: %s', p)
-            os.unlink(p)
+            #os.unlink(p)
 
     def _list_packages(self):
         """Return a list of string package names in pwd"""
@@ -319,7 +320,7 @@ if __name__ == "__main__":
     # set logging level
     if args.verbose > 1:
         set_log_debug()
-    elif args.verbose == 1:
+    else:
         set_log_info()
 
     ArchRebuilder(args.REPO_TAR_GZ).run(args.skip, args.only)
