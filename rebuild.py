@@ -22,6 +22,7 @@ logger = logging.getLogger()
 
 IGNORE_PACKAGES = ['lego-git', 'linux-precision5530', 'aws-session-manager-plugin-jantman']
 
+
 class ArchRebuilder(object):
 
     def __init__(self, repofile):
@@ -35,6 +36,9 @@ class ArchRebuilder(object):
             'Found %d packages in directory: %s', len(pkgnames), pkgnames
         )
         pkginfo = self.read_repo_file()
+        repo_files = {
+            x['FILENAME']: x['NAME'] for x in pkginfo.values()
+        }
         latest_versions = self.latest_package_versions(pkgnames)
         to_upgrade = []
         for name in pkgnames:
@@ -56,9 +60,17 @@ class ArchRebuilder(object):
         for pkgname in to_upgrade:
             keep_versions.append((pkgname, latest_versions[pkgname]))
             rev = self._update_pkg(pkgname)
-            self._build_pkg(pkgname, rev)
+            pk_path = self._build_pkg(pkgname, rev)
+            self._run_cmd(
+                [
+                    'repo-add', '-R', '-n',
+                    'jantman.db.tar.gz',
+                    os.path.basename(pk_path)
+                ],
+                cwd=repodir
+            )
         logger.info('Successfully built all %d packages', len(to_upgrade))
-        self.prune_repo(keep_versions)
+        self.prune_repo(latest_versions, repo_files)
 
     def _update_pkg(self, pkg_name):
         logger.info('Updating package: %s', pkg_name)
@@ -159,8 +171,9 @@ class ArchRebuilder(object):
                 r.returncode, r.stdout.decode()
             ))
         os.chdir(self._topdir)
+        return newpath
 
-    def prune_repo(self, name_ver_to_keep):
+    def prune_repo(self, name_ver_to_keep, repo_files):
         logger.info('Pruning old packages from repo...')
         logger.debug('Keep: %s', name_ver_to_keep)
         repodir = os.path.dirname(self._repofile)
@@ -172,7 +185,7 @@ class ArchRebuilder(object):
         )])
         logger.info('Found %d packages currently in repo', len(repofiles))
         logger.debug('Files in repo: %s', repofiles)
-        for pkname, pkver in name_ver_to_keep:
+        for pkname, pkver in name_ver_to_keep.items():
             for arch in ['x86_64', 'any']:
                 fname = '%s-%s-%s.pkg.tar.xz' % (pkname, pkver, arch)
                 if fname in repofiles:
@@ -180,14 +193,28 @@ class ArchRebuilder(object):
                 fname = '%s-%s-%s.pkg.tar.zst' % (pkname, pkver, arch)
                 if fname in repofiles:
                     repofiles.remove(fname)
+        for pkname in IGNORE_PACKAGES:
+            for fname in repofiles:
+                if fname.startswith(pkname):
+                    repofiles.remove(fname)
         logger.info(
             'Found %d orphaned packages to remove: %s',
             len(repofiles), ' '.join(repofiles)
         )
         for fname in repofiles:
+            if fname not in repo_files:
+                raise RuntimeError(f'ERROR: {fname} not found in repo!')
             p = os.path.join(repodir, fname)
+            self._run_cmd(
+                [
+                    'repo-remove',
+                    'jantman.db.tar.gz',
+                    fname
+                ],
+                cwd=repodir
+            )
             logger.warning('Unlink: %s', p)
-            #os.unlink(p)
+            os.unlink(p)
 
     def _list_packages(self):
         """Return a list of string package names in pwd"""
