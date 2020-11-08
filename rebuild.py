@@ -39,6 +39,15 @@ class ArchRebuilder(object):
         repo_files = {
             x['FILENAME']: x['NAME'] for x in pkginfo.values()
         }
+        logger.debug('Repo current files: %s', repo_files)
+        repodir = os.path.dirname(self._repofile)
+        for fname, pkname in repo_files.items():
+            fpath = os.path.join(repodir, fname)
+            if not os.path.exists(fpath):
+                raise RuntimeError(
+                    f'ERROR: File for {pkname} ({fname}) is in repo but '
+                    'does not exist on disk!'
+                )
         latest_versions = self.latest_package_versions(pkgnames)
         to_upgrade = []
         for name in pkgnames:
