@@ -87,7 +87,6 @@ build() {
           --enable-gimp-console \
           --enable-gtk-doc \
           --disable-check-update \
-          --disable-python \
           --with-bug-report-url='https://github.com/bartoszek/AUR-gimp-git/issues' \
           --with-openexr \
           --without-aa
