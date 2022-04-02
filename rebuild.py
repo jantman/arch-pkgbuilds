@@ -318,6 +318,7 @@ def parse_args(argv):
     p.add_argument('-o', '--only', dest='only', action='append', default=[],
                    help='Only build these packages')
     p.add_argument('REPO_TAR_GZ', action='store', type=str,
+                   default='repo/jantman.db.tar.gz',
                    help='Path to repo .tar.gz file')
     args = p.parse_args(argv)
     return args
