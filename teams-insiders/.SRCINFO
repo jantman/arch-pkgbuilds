@@ -1,0 +1,20 @@
+pkgbase = teams-insiders
+	pkgdesc = Microsoft Teams for Linux is your chat-centered workspace in Office 365 - Insiders Version
+	pkgver = 1.5.00.10453
+	pkgrel = 1
+	url = https://packages.microsoft.com/repos/ms-teams/pool/main/t/teams-insiders
+	arch = x86_64
+	license = custom
+	depends = gtk3
+	depends = libxss
+	depends = alsa-lib
+	depends = libxtst
+	depends = libsecret
+	depends = nss
+	depends = glibc>=2.28-4
+	optdepends = org.freedesktop.secrets
+	noextract = teams-insiders_1.5.00.10453_amd64.deb
+	source = https://packages.microsoft.com/repos/ms-teams/pool/main/t/teams-insiders/teams-insiders_1.5.00.10453_amd64.deb
+	b2sums = 601d1bf8c56c632da0ab2b98d03ec50593f4f5605a4ec8cefedb613a4ca09c1543923258535a7b0af88d5150f87934d46c4c7769ccf488b50f80d75b46781850
+
+pkgname = teams-insiders
