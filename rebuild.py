@@ -22,6 +22,8 @@ logger = logging.getLogger()
 
 IGNORE_PACKAGES = [
     'lego-git', 'linux-precision5530', 'aws-session-manager-plugin-jantman', 'brother-mfc-j5945dw',
+    'vmware-horizon-smartcard', 'vmware-horizon-mmr', 'vmware-horizon-teams-optimization', 'vmware-horizon-rtav', 'vmware-horizon-tsdr',
+    'vmware-horizon-integrated-printing', 'vmware-horizon-usb', 'vmware-horizon-html5mmr'
 ]
 
 
