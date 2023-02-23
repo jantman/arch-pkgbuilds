@@ -57,7 +57,7 @@ class ArchRebuilder(object):
         for name in pkgnames:
             curr = pkginfo.get(name, {'VERSION': 'NONE'})['VERSION']
             latest = latest_versions[name]
-            logger.info('Package %s current=%s latest=%s', name, curr, latest)
+            logger.info('Package %s repo=%s aur=%s', name, curr, latest)
             if name in skip_packages:
                 print('Skipping: %s' % name)
                 continue
