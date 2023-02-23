@@ -83,6 +83,7 @@ class ArchRebuilder(object):
                 cwd=repodir
             )
         logger.info('Successfully built all %d packages', len(to_upgrade))
+        return
         self.prune_repo(latest_versions, repo_files)
 
     def _update_pkg(self, pkg_name):
