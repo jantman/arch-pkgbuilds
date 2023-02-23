@@ -169,6 +169,7 @@ class ArchRebuilder(object):
         )
         logger.info('Moving package to: %s', newpath)
         os.rename(os.path.realpath(packages[0]), newpath)
+        os.chdir(self._topdir)
         assert self._run_cmd(['git', 'add', '.']).returncode == 0
         r = self._run_cmd([
             'git', 'commit', '-m',
@@ -183,7 +184,6 @@ class ArchRebuilder(object):
             raise RuntimeError('ERROR: git commit failed %d:\n%s' % (
                 r.returncode, r.stdout.decode()
             ))
-        os.chdir(self._topdir)
         return newpath
 
     def prune_repo(self, name_ver_to_keep, repo_files):
