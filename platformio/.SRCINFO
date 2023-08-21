@@ -1,6 +1,6 @@
 pkgbase = platformio
 	pkgdesc = A cross-platform code builder and library manager
-	pkgver = 6.1.8
+	pkgver = 6.1.10
 	pkgrel = 1
 	url = https://github.com/platformio/platformio-core/
 	arch = any
@@ -21,11 +21,12 @@ pkgbase = platformio
 	depends = python-starlette
 	depends = python-wsproto
 	depends = uvicorn
+	optdepends = platformio-udev-rules: user access for various boards/devices
 	optdepends = python-click-completion: for shell completions
 	optdepends = python-shellingham: for shell completions
 	conflicts = platformio-git
-	source = https://github.com/platformio/platformio-core/archive/v6.1.8.tar.gz
-	sha256sums = 1c5020782192016114f48da3efbf86871c086184fabb47ea172e7fbc15665e9e
+	source = https://github.com/platformio/platformio-core/archive/v6.1.10.tar.gz
+	sha256sums = 003937c9ea88942e6dd35b909622d281dfcdbe5fba4e0bba92ef5cf514ed4bf3
 
 pkgname = platformio
 
