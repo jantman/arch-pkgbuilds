@@ -293,8 +293,7 @@
 	"extensionEnabledApiProposals": {
 		"ms-vscode.vscode-selfhost-test-provider": [
 			"testObserver",
-			"testRelatedCode",
-			"attributableCoverage"
+			"testRelatedCode"
 		],
 		"VisualStudioExptTeam.vscodeintellicode-completions": [
 			"inlineCompletionsAdditions"
@@ -331,9 +330,14 @@
 			"quickPickItemTooltip",
 			"terminalDataWriteEvent",
 			"terminalExecuteCommandEvent",
-			"contribIssueReporter",
 			"notebookReplDocument",
-			"notebookVariableProvider"
+			"notebookVariableProvider",
+			"terminalShellEnv",
+			"terminalShellType"
+		],
+		"ms-python.vscode-python-envs": [
+			"terminalShellEnv",
+			"terminalShellType"
 		],
 		"ms-dotnettools.dotnet-interactive-vscode": [
 			"notebookMessaging"
@@ -438,7 +442,6 @@
 			"contribMultiDiffEditorMenus",
 			"contribShareMenu",
 			"diffCommand",
-			"fileComments",
 			"quickDiffProvider",
 			"shareProvider",
 			"tabInputTextMerge",
@@ -461,7 +464,6 @@
 			"defaultChatParticipant",
 			"embeddings",
 			"chatEditing",
-			"chatVariableResolver",
 			"chatProvider",
 			"mappedEditsProvider",
 			"aiRelatedInformation",
@@ -477,14 +479,20 @@
 			"contribCommentsViewThreadMenus",
 			"newSymbolNamesProvider",
 			"findFiles2",
+			"chatReferenceDiagnostic",
 			"extensionsAny",
 			"authLearnMore",
 			"testObserver",
 			"aiTextSearchProvider",
+			"chatReadonlyPromptReference",
 			"documentFiltersExclusive",
 			"chatParticipantPrivate",
 			"contribDebugCreateConfiguration",
-			"inlineEdit"
+			"inlineEdit",
+			"inlineCompletionsAdditions",
+			"chatReferenceBinaryData",
+			"languageModelSystem",
+			"languageModelCapabilities"
 		],
 		"GitHub.remotehub": [
 			"contribRemoteHelp",
@@ -504,11 +512,8 @@
 		"ms-python.gather": [
 			"notebookCellExecutionState"
 		],
-		"ms-python.vscode-pylance": [
-			"notebookCellExecutionState"
-		],
+		"ms-python.vscode-pylance": [],
 		"ms-python.debugpy": [
-			"contribIssueReporter",
 			"contribViewsWelcome",
 			"debugVisualization",
 			"portsAttributes"
@@ -520,7 +525,6 @@
 			"notebookDeprecated",
 			"notebookMessaging",
 			"notebookMime",
-			"notebookCellExecutionState",
 			"portsAttributes",
 			"quickPickSortByLabel",
 			"notebookKernelSource",
@@ -533,9 +537,10 @@
 			"notebookVariableProvider",
 			"notebookReplDocument"
 		],
-		"dbaeumer.vscode-eslint": [
-			"notebookCellExecutionState"
+		"ms-toolsai.tensorboard": [
+			"portsAttributes"
 		],
+		"dbaeumer.vscode-eslint": [],
 		"ms-vscode.azure-sphere-tools-ui": [
 			"tunnels"
 		],
@@ -546,10 +551,8 @@
 			"extensionsAny"
 		],
 		"ms-vscode.cpptools": [
-			"terminalDataWriteEvent"
-		],
-		"redhat.java": [
-			"documentPaste"
+			"terminalDataWriteEvent",
+			"chatParticipantAdditions"
 		],
 		"vscjava.vscode-java-pack": [],
 		"ms-dotnettools.csdevkit": [
@@ -573,13 +576,12 @@
 		"ms-toolsai.datawrangler": [],
 		"ms-vscode.vscode-commander": [],
 		"ms-vscode.vscode-websearchforcopilot": [],
-		"ms-vscode.vscode-copilot-data-analysis": [
-			"chatVariableResolver",
-			"chatProvider"
-		],
 		"ms-vscode.vscode-copilot-vision": [
 			"chatReferenceBinaryData",
 			"codeActionAI"
+		],
+		"ms-autodev.vscode-autodev": [
+			"chatParticipantAdditions"
 		]
 	},
 	"tasConfig": {
@@ -774,7 +776,8 @@
 			"github.codespaces",
 			"github.copilot",
 			"github.copilot-chat",
-			"ms-vsliveshare.vsliveshare"
+			"ms-vsliveshare.vsliveshare",
+			"ms-azuretools.vscode-azure-github-copilot"
 		],
 		"github-enterprise": [
 			"vscode.github",
@@ -784,12 +787,14 @@
 			"github.codespaces",
 			"github.copilot",
 			"github.copilot-chat",
-			"ms-vsliveshare.vsliveshare"
+			"ms-vsliveshare.vsliveshare",
+			"ms-azuretools.vscode-azure-github-copilot"
 		],
 		"microsoft": [
 			"ms-vscode.azure-repos",
 			"ms-vscode.remote-server",
 			"ms-vsliveshare.vsliveshare",
+			"ms-azuretools.vscode-azure-github-copilot",
 			"ms-azuretools.vscode-azureresourcegroups",
 			"ms-edu.vscode-learning",
 			"ms-toolsai.vscode-ai",
@@ -799,10 +804,14 @@
 			"ms-vscode.azure-repos",
 			"ms-vscode.remote-server",
 			"ms-vsliveshare.vsliveshare",
+			"ms-azuretools.vscode-azure-github-copilot",
 			"ms-azuretools.vscode-azureresourcegroups",
 			"ms-edu.vscode-learning",
 			"ms-toolsai.vscode-ai",
 			"ms-toolsai.vscode-ai-remote"
+		],
+		"__GitHub.copilot-chat": [
+			"ms-azuretools.vscode-azure-github-copilot"
 		]
 	},
 	"auth": {
