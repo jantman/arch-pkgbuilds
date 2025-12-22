@@ -2,6 +2,7 @@ pkgbase = foldingathome
 	pkgdesc = A distributed computing project for simulating protein dynamics
 	pkgver = 8.4.9
 	pkgrel = 1
+	epoch = 1
 	url = https://foldingathome.org/
 	install = fah.install
 	arch = x86_64
