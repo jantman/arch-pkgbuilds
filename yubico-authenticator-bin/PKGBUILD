@@ -1,11 +1,11 @@
 # Maintainer: Ary Kleinerman <kleinerman at gmail dot com>
 #
 pkgname=yubico-authenticator-bin
-pkgver=7.2.3
+pkgver=7.3.0
 pkgdesc="Cross-platform application for managing your YubiKey's second factor credentials (version 7)"
 arch=('x86_64')
 url="https://github.com/Yubico/yubioath-flutter"
-license=('Apache')
+license=('Apache-2.0')
 depends=('ccid' 'zenity')
 conflicts=('yubico-authenticator')
 options=(!strip)
@@ -20,7 +20,7 @@ validpgpkeys=(
     '20EE325B86A81BCBD3E56798F04367096FBA95E8'
 )
 
-sha256sums=('05a6127bd58481780649026bf8dcc73020eb940512971a81d765c6c0e4a2bb7d'
+sha256sums=('a82aa86a60f16d2d6bb07789f33d3256e12b7d2f231a0d6625dea1706c4069e1'
             'SKIP')
 
 # If the installation fails with 'One or more PGP signatures could not be verified',
