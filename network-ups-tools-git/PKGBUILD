@@ -47,7 +47,7 @@ backup=(
   etc/nut/upsstats-single.html
 )
 source=(
-  git+https://github.com/networkupstools/nut.git
+  git+https://github.com/networkupstools/nut.git#commit=6297d1fb795dd6976e617bce104b3398f7dbfafb
   nut.sysusers
   nut.tmpfiles
 )
