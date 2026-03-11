@@ -6,7 +6,7 @@
 # Contributor: Dan Ziemba <zman0900@gmail.com>
 
 pkgname=network-ups-tools-git
-pkgver=2.8.0.rc1.r39.g88acc3578
+pkgver=2.8.5.rc4.r75.g6297d1fb7
 pkgrel=1
 pkgdesc='A collection of programs which provide a common interface for monitoring and administering UPS, PDU and SCD hardware'
 arch=(x86_64)
