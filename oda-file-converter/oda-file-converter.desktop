@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=ODA File Converter
-Comment=ODA SDK® for .dwg files 22.10.0.0, Open Design Alliance Inc.
-Exec=/usr/bin/oda-file-converter
-Icon=oda-file-converter
-Terminal=false
-Type=Application
-Categories=Graphics;3DGraphics;VectorGraphics;RasterGraphics;Viewer;

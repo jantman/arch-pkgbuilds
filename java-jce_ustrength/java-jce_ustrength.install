@@ -1,4 +1,0 @@
-post_upgrade() {
-    echo "Running the update command manually is not needed anymore,"
-    echo "since this was moved to hooks."
-}
