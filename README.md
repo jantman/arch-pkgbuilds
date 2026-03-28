@@ -57,6 +57,27 @@ checkrebuild -i jantman
 
 This is also run automatically as part of `./aur-rebuild.sh`.
 
+## Pruning Unused Packages
+
+Find and remove repo packages that aren't installed on any machine:
+
+```bash
+# Dry run (default) - this machine only
+./aur-prune.sh
+
+# Dry run - this machine + others (pass pacman -Q output files)
+./aur-prune.sh myprecious.txt othermachine.txt
+
+# Actually remove
+./aur-prune.sh --remove myprecious.txt othermachine.txt
+
+# Sync to S3
+./update_sync.sh
+```
+
+To generate a package list on a remote machine: `pacman -Q > hostname.txt`,
+then SCP the file to phoenix.
+
 ## Ignored Packages
 
 Some packages are excluded from automatic updates (see the `IGNORE_PACKAGES`
