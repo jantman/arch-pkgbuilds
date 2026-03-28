@@ -41,7 +41,7 @@ if [[ "${1:-}" == "--dry-run" ]]; then
     aur repo --database "$REPO_NAME" --upgrades "${IGNORE_ARGS[@]}" || true
     echo ""
     echo "=== Packages needing library rebuilds ==="
-    checkrebuild -r "$REPO_NAME" || true
+    checkrebuild -i "$REPO_NAME" || true
     exit 0
 fi
 
@@ -65,7 +65,7 @@ aur sync --database "$REPO_NAME" --upgrades --no-view --no-confirm "${IGNORE_ARG
 # --- Step 2: Check for library rebuilds ---
 echo ""
 echo "=== Checking for packages needing library rebuilds ==="
-REBUILD_LIST=$(checkrebuild -r "$REPO_NAME" | awk '{print $2}' || true)
+REBUILD_LIST=$(checkrebuild -i "$REPO_NAME" | awk '{print $2}' || true)
 
 if [[ -n "$REBUILD_LIST" ]]; then
     echo "Packages needing rebuild:"

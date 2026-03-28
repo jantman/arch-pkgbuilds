@@ -47,7 +47,7 @@ and adds to the local repo. Then run `./update_sync.sh` to publish to S3.
 After system updates, check for packages linked against outdated libraries:
 
 ```bash
-checkrebuild -r jantman
+checkrebuild -i jantman
 ```
 
 This is also run automatically as part of `./aur-rebuild.sh`.
