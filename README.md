@@ -107,5 +107,4 @@ The current workflow is manual. Future automation options:
 ### GitHub Actions
 
 See [github_actions_process.md](github_actions_process.md) for a design document
-on moving to GitHub Actions-based builds with S3 hosting. See also
-[repo_overhaul.md](repo_overhaul.md) for a broader comparison of options.
+on moving to GitHub Actions-based builds with S3 hosting.
