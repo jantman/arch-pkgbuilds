@@ -41,7 +41,7 @@ if [[ "${1:-}" == "--force" ]]; then
         exit 1
     fi
     echo "=== Force rebuilding: $* ==="
-    aur sync --database "$REPO_NAME" --no-view --no-confirm --force "$@"
+    aur sync --database "$REPO_NAME" --no-view --no-confirm --no-ver -f "$@"
     echo ""
     echo "Done. Run ./update_sync.sh to sync to S3."
     exit 0
@@ -74,7 +74,7 @@ if [[ -n "$REBUILD_LIST" ]]; then
             continue
         fi
         echo "Rebuilding: $pkg"
-        aur sync --database "$REPO_NAME" --no-view --no-confirm --force "$pkg"
+        aur sync --database "$REPO_NAME" --no-view --no-confirm --no-ver -f "$pkg"
     done
 else
     echo "No packages need library rebuilds."
