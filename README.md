@@ -20,11 +20,16 @@ On other machines:
 ## Adding a New Package
 
 ```bash
+# Build and add to the local repo (shows PKGBUILD diff for review)
 aur sync --database jantman <package-name>
+
+# Sync to S3
+./update_sync.sh
 ```
 
-This fetches the PKGBUILD from AUR, shows a diff for review, builds,
-and adds to the local repo. Then run `./update_sync.sh` to publish to S3.
+`aur sync` fetches the PKGBUILD from AUR, shows a diff for review,
+builds, and adds the package to the local repo. aurutils maintains
+its own git clones (with full history) in `~/.cache/aurutils/sync/`.
 
 ## Checking for Updates and Rebuilding
 
@@ -57,10 +62,12 @@ This is also run automatically as part of `./aur-rebuild.sh`.
 Some packages are excluded from automatic updates (see the `IGNORE_PACKAGES`
 list in `aur-rebuild.sh`). These must be built/updated manually.
 
-## Legacy Scripts
+## Legacy
 
 - `rebuild.py` - replaced by `aur-rebuild.sh` (uses aurutils)
 - `aurget.sh` - replaced by `aur sync --database jantman <pkg>`
+- `*/PKGBUILD` directories - historical snapshots; no longer updated.
+  aurutils tracks PKGBUILDs (with full git history) in `~/.cache/aurutils/sync/`
 
 ## Future Enhancements
 

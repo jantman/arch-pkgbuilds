@@ -4,6 +4,12 @@
 
 Build AUR packages via GitHub Actions, publish to S3. Three Arch machines consume the repo via `pacman -Syu` — none of them build packages.
 
+**Note:** This design doc was written before the decision to stop tracking
+PKGBUILDs in this git repo. A GitHub Actions approach would need to maintain
+a package list (e.g. a text file of AUR package names) rather than relying
+on checked-in PKGBUILD directories. The workflows below would need to fetch
+PKGBUILDs from AUR at build time rather than reading them from the repo.
+
 ## Repo Structure
 
 ```
@@ -13,16 +19,9 @@ Build AUR packages via GitHub Actions, publish to S3. Three Arch machines consum
 │       ├── build.yml          # Build and publish on push to master
 │       ├── check-updates.yml  # Scheduled AUR update check
 │       └── full-rebuild.yml   # Scheduled full rebuild
-├── packages/
-│   ├── google-chrome/
-│   │   ├── PKGBUILD
-│   │   └── .SRCINFO
-│   ├── spotify/
-│   │   ├── PKGBUILD
-│   │   └── .SRCINFO
-│   └── ...
+├── packages.txt               # List of AUR package names to build
 ├── scripts/
-│   ├── check-aur-updates.sh   # Compare local vs AUR versions
+│   ├── check-aur-updates.sh   # Compare repo vs AUR versions
 │   ├── build-package.sh       # Build a single package in clean chroot
 │   └── sync-repo.sh           # repo-add + aws s3 sync
 └── repo/                      # (gitignored) local repo DB during CI builds
