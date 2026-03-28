@@ -16,3 +16,7 @@ My PKGBUILDs for Arch Linux
 2. ``python3 rebuild.py -v repo/jantman.db.tar.gz``
 3. Verify the changes look acceptable: ``git diff $BASEREV HEAD``
 4. Assuming everything looks right, update the repo and sync to S3: ``./update_sync.sh``
+
+## Future Enhancement
+
+See [github_actions_process.md](github_actions_process.md) for a design document on moving to GitHub Actions-based builds with S3 hosting. See also [repo_overhaul.md](repo_overhaul.md) for a broader comparison of options.
