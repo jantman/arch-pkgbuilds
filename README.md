@@ -4,19 +4,80 @@
 
 **Repository Index: http://archrepo.jasonantman.com/current/**
 
-My PKGBUILDs for Arch Linux
+Personal AUR package repository for Arch Linux, managed with
+[aurutils](https://github.com/aurutils/aurutils) and
+[rebuild-detector](https://github.com/maximbaz/rebuild-detector).
 
-## Grabbing New Packages
+## Prerequisites
 
-``./aurget.sh PKG-NAME``
+On the build machine (phoenix):
+- `aurutils` and `rebuild-detector` installed (managed by Puppet via `phoenix_packages.pp`)
+- `[jantman]` repo in `/etc/pacman.conf` with `Server = file:///home/jantman/GIT/arch-pkgbuilds/repo` (managed by Puppet via `archlinux_base.pp`)
 
-## Rebuilding / Updating
+On other machines:
+- `[jantman]` repo in `/etc/pacman.conf` with `Server = http://archrepo.jasonantman.com/current` (managed by Puppet)
 
-1. ``export BASEREV=$(git rev-parse HEAD)``
-2. ``python3 rebuild.py -v repo/jantman.db.tar.gz``
-3. Verify the changes look acceptable: ``git diff $BASEREV HEAD``
-4. Assuming everything looks right, update the repo and sync to S3: ``./update_sync.sh``
+## Adding a New Package
 
-## Future Enhancement
+```bash
+aur sync --database jantman <package-name>
+```
 
-See [github_actions_process.md](github_actions_process.md) for a design document on moving to GitHub Actions-based builds with S3 hosting. See also [repo_overhaul.md](repo_overhaul.md) for a broader comparison of options.
+This fetches the PKGBUILD from AUR, shows a diff for review, builds,
+and adds to the local repo. Then run `./update_sync.sh` to publish to S3.
+
+## Checking for Updates and Rebuilding
+
+```bash
+# Dry run - show what needs updating
+./aur-rebuild.sh --dry-run
+
+# Build all updates + library rebuilds
+./aur-rebuild.sh
+
+# Force rebuild a specific package
+./aur-rebuild.sh --force <package-name>
+
+# Sync to S3
+./update_sync.sh
+```
+
+## Checking for Library Rebuilds
+
+After system updates, check for packages linked against outdated libraries:
+
+```bash
+checkrebuild -r jantman
+```
+
+This is also run automatically as part of `./aur-rebuild.sh`.
+
+## Ignored Packages
+
+Some packages are excluded from automatic updates (see the `IGNORE_PACKAGES`
+list in `aur-rebuild.sh`). These must be built/updated manually.
+
+## Legacy Scripts
+
+- `rebuild.py` - replaced by `aur-rebuild.sh` (uses aurutils)
+- `aurget.sh` - replaced by `aur sync --database jantman <pkg>`
+
+## Future Enhancements
+
+### Automation (systemd timers)
+
+The current workflow is manual. Future automation options:
+
+- **Semi-automated:** Systemd timer on phoenix runs `aur sync --upgrades` daily
+  and builds updates automatically. S3 sync stays manual for review before
+  pushing to all machines.
+- **Fully automated:** Timer runs `aur-rebuild.sh` + `update_sync.sh` on a
+  schedule. All 3 machines get updates automatically.
+- **Pacman hook for rebuild-detector:** Run `checkrebuild` automatically after
+  every `pacman -Syu` on phoenix to catch library-triggered rebuilds immediately.
+
+### GitHub Actions
+
+See [github_actions_process.md](github_actions_process.md) for a design document
+on moving to GitHub Actions-based builds with S3 hosting. See also
+[repo_overhaul.md](repo_overhaul.md) for a broader comparison of options.
