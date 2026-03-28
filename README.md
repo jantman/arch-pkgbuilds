@@ -23,8 +23,9 @@ On other machines:
 # Build and add to the local repo (shows PKGBUILD diff for review)
 aur sync --database jantman <package-name>
 
-# Sync to S3
+# Sync to S3 and update package list
 ./update_sync.sh
+./update-package-list.sh
 ```
 
 `aur sync` fetches the PKGBUILD from AUR, shows a diff for review,
@@ -43,8 +44,9 @@ its own git clones (with full history) in `~/.cache/aurutils/sync/`.
 # Force rebuild a specific package
 ./aur-rebuild.sh --force <package-name>
 
-# Sync to S3
+# Sync to S3 and update package list
 ./update_sync.sh
+./update-package-list.sh
 ```
 
 ## Checking for Library Rebuilds
@@ -71,8 +73,9 @@ Find and remove repo packages that aren't installed on any machine:
 # Actually remove
 ./aur-prune.sh --remove myprecious.txt othermachine.txt
 
-# Sync to S3
+# Sync to S3 and update package list
 ./update_sync.sh
+./update-package-list.sh
 ```
 
 To generate a package list on a remote machine: `pacman -Q > hostname.txt`,
