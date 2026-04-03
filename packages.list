@@ -1,5 +1,5 @@
 1password	8.12.8-26
-1password-cli	2.32.1-1
+1password-cli	2.33.1-1
 admesh	0.98.5+r27+gd775906-2
 android-apktool	3.0.1-1
 apachedirectorystudio	2.0.0.v20210717.17-2
@@ -9,7 +9,7 @@ brother-hl3140cw	1.1.2-2
 brother-mfc-j5945dw	1.0.0-1
 brother-mfc-l2750dw	4.0.0-1
 can-utils	2025.01-3
-claude-desktop-bin	1.1.9310-3
+claude-desktop-bin	1.569.0-5
 cura-bin	5.12.0-1
 dex2jar	2.4.34-1
 edrawmax-bin	14.0.0-0
@@ -20,7 +20,7 @@ fahcontrol	7.6.21-1
 fahviewer	7.6.21-1
 foldingathome	1:8.5.5-1
 fusioninventory-agent	2.6-1
-google-chrome	146.0.7680.164-1
+google-chrome	146.0.7680.177-1
 gradle8	8.14.3-1
 hotshots-git	r19.e3712ae-4
 iscan-plugin-network	1.1.2-15
@@ -61,7 +61,7 @@ sbupdate-git	0.r133.1bd9722-2
 slack-desktop	4.47.69-1
 spotify	1:1.2.84.476-1
 usbguard-notifier	0.1.1-1
-visual-studio-code-bin	1.113.0-1
+visual-studio-code-bin	1.114.0-1
 yed	1:3.25.1-1
 yubico-authenticator-bin	7.3.2-1
 zoom	7.0.0-1
