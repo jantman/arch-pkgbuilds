@@ -21,6 +21,11 @@ fahviewer	7.6.21-1
 foldingathome	1:8.5.5-1
 fusioninventory-agent	2.6-1
 google-chrome	146.0.7680.177-1
+google-cloud-cli	567.0.0-1
+google-cloud-cli-bq	567.0.0-1
+google-cloud-cli-bundled-python3-unix	567.0.0-1
+google-cloud-cli-component-gke-gcloud-auth-plugin	567.0.0-1
+google-cloud-cli-gsutil	567.0.0-1
 gradle8	8.14.3-1
 hotshots-git	r19.e3712ae-4
 iscan-plugin-network	1.1.2-15
