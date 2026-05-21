@@ -17,6 +17,7 @@ IGNORE_PACKAGES=(
     lego-git
     brother-mfc-j5945dw
     python-ajsonrpc
+    entangle
 )
 
 # Build --ignore arguments for aur sync
